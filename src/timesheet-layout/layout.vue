@@ -1,5 +1,6 @@
 <template>
 	<div>
+		Hello
 		<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
 			:totalTimeInSec="totalTime" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
 		<div>

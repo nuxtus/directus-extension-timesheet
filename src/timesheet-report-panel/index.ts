@@ -2,22 +2,22 @@ import PanelComponent from "./panel.vue"
 import { definePanel } from "@directus/extensions-sdk"
 
 export default definePanel({
-	id: "nuxtus-timesheet-report-panel",
+	id: "td_timesheet_report",
 	name: "Timesheet Report",
 	icon: "timer",
-	description: "Displays a table of timesheet entries.",
+	description: "Summarise staff timesheet information.",
 	component: PanelComponent,
 	options: [
-		{
-			field: "text",
-			name: "Text",
-			type: "string",
-			meta: {
-				interface: "input",
-				width: "full",
-			},
-		},
+		// {
+		// 	field: "text",
+		// 	name: "Text",
+		// 	type: "string",
+		// 	meta: {
+		// 		interface: "input",
+		// 		width: "full",
+		// 	},
+		// },
 	],
-	minWidth: 12,
-	minHeight: 8,
+	minWidth: 42,
+	minHeight: 18,
 })
