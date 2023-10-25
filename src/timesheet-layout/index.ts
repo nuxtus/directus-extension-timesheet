@@ -30,7 +30,11 @@ export default defineLayout({
 			{
 				sort: ref(["-date_created"]),
 				limit,
-				fields: ref(["*", "project.*"]),
+				fields: ref([
+					"*",
+					"task.item:project.Name",
+					"task.item:timesheet_options.Name",
+				]),
 				filter,
 				search,
 				page: ref(1),

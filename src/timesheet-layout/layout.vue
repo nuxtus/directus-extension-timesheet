@@ -3,6 +3,7 @@
 		<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
 			:totalTimeInSec="totalTime" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
 		<div>
+			{{ items }}
 			<v-table v-if="items != undefined && items.length > 0" class="table" v-model:headers="tableHeaders"
 				:items="items" :show-resize="true" fixed-header @click:row="editTimesheetEntry" :allowHeaderReorder="true"
 				noItemsText="You have not recorded any times yet" itemKey="id" @update:sort="resort" :sort="sort">
@@ -154,10 +155,10 @@ function createTimeEntry(details) {
 		}
 	}).then((response) => {
 		currentTimer.value = response.data.data
-		// Need to look up the project name
-		let projectIndex = projects.value.findIndex(project => project.value === currentTimer.value.project)
-		if (projectIndex !== -1) {
-			currentTimer.value.project = { name: projects.value[projectIndex].text }
+		// Need to look up the task name
+		let taskIndex = tasks.value.findIndex(task => task.value === currentTimer.value.task.value && task.collection === currentTimer.value.task.collection)
+		if (taskIndex !== -1) {
+			currentTimer.value.task = { name: tasks.value[taskIndex].text }
 		}
 		props.items.unshift(currentTimer.value)
 	})
@@ -235,7 +236,7 @@ async function paginate(pageMove) {
 				page: page,
 				sort: sort.value,
 				limit: props.limit,
-				fields: ["*", "project.*", "task.*"]
+				fields: ["*", "task.item:project.Name", "task.item:timesheet_options.Name"]
 			},
 		}
 	})
@@ -252,7 +253,7 @@ async function resort(sortedBy) {
 				page: page,
 				sort: sortedBy ? (sortedBy.desc ? `-${sortedBy.by}` : sortedBy.by) : '',
 				limit: props.limit,
-				fields: ["*", "project.*"]
+				fields: ["*", "task.item:project.Name", "task.item:timesheet_options.Name"]
 			},
 		}
 	})

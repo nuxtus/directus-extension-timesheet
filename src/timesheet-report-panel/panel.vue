@@ -5,7 +5,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
+import { useItems } from '@directus/extensions-sdk'
+
+const { items } = useItems('timesheet', {
+	fields: '*'
+})
+
+console.log("HELLO", items)
+
 
 export default defineComponent({
 	props: {
@@ -18,7 +26,7 @@ export default defineComponent({
 			default: '',
 		},
 	},
-});
+})
 </script>
 
 <style scoped>
