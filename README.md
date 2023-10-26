@@ -8,9 +8,8 @@ Allows users to start/stop a timer and record the times in a timesheet.
 You will need to create some collections manually:
 
 1. timesheets: This should have user/date created and user/date updated fields as well as custom fields start_time, end_time, end_time_original (timestampz, seconds enabled) and task (M2A relationship, link to projects and timesheet_tasks). Hide the end_time_original from users so they can't change.
-2. timesheet_tasks: Should have a "name" field which will show in the "task" drop down selector of the timer, to record times against (above and beyond projects)
-3. projects: just a "name" input field is required
-4. (optional) Add a nineDayFortnightStart field to users to calculate 9DF - it should be set to the LAST start of the 9DF for this staff member. Type Date.
+2. timesheet_tasks: Should have a "name" field which will show in the "task" drop down selector of the timer, to record times against
+3. (optional) Add a nineDayFortnightStart field to users to calculate 9DF - it should be set to the LAST start of the 9DF for this staff member. Type Date.
 
 ## Installation
 
