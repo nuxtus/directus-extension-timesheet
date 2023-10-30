@@ -3,23 +3,26 @@
 A project timer layout for timesheet collections in Directus.
 Allows users to start/stop a timer and record the times in a timesheet.
 
-## Set up
-
-You will need to create some collections manually:
-
-1. timesheets: This should have user/date created and user/date updated fields as well as custom fields start_time, end_time, end_time_original (timestampz, seconds enabled) and task (M2A relationship, link to projects and timesheet_tasks). Hide the end_time_original from users so they can't change.
-2. timesheet_tasks: Should have a "name" field which will show in the "task" drop down selector of the timer, to record times against
-3. (optional) Add a nineDayFortnightStart field to users to calculate 9DF - it should be set to the LAST start of the 9DF for this staff member. Type Date.
-
 ## Installation
 
 1. Git clone this project
 2. `npm i`
 3. `npm run build`
-4. Copy the entire folder into your Directus extensions folder `/extensions/bundles/timesheets`
-5. Restart directus
+4. Copy the entire folder into your Directus extensions folder `/extensions/directus-extension-timesheet`
+5. Run the supplied schema to update your database: `npx directus schema apply ./schema/schema.json`
+6. Restart directus
+7. (optional) You can change the collection that the timesheets record time against by visiting the Timesheets > Settings and manualling changing the settings
+8. (optional) If you wish to calculate 9 day fortnights, add a nineDayFortnightStart field to the default Directus users table (type Date) to calculate 9DF - it should be set to the LAST start of the 9DF for this staff member.
 
-Note: If using Docker you may want to add the extension to the volumes via directus -> volumes, add: `- ./extensions/layouts/td_timesheet/dist:/directus/extensions/layouts/td_timesheet`
+Note: If using Docker you may want to add the extension to the volumes via directus -> volumes, add: `- ./node_-_modules/directus-extension-timesheet/dist:/directus/extensions/directus-extension-timesheet`
+
+## Using your own task collection
+
+The collection that that timers are run against is configurable in the Timesheet > Settings area. You can change this to any collection you like, but it must have the following fields:
+
+1. id (integer)
+2. name\description (string) - This can be called anything you want but must be a string
+3. status - A standard Directus status field, only the "active" status is displayed in the timer dropdown
 
 ## Validation
 

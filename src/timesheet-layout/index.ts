@@ -25,16 +25,17 @@ export default defineLayout({
 
 		const limit = ref(20)
 
+		// Get the timesheet settings from ts_settings
+		const { items: settings } = useItems(ref("ts_settings"), {
+			fields: ["task_collection", "task_collection_display_field"],
+		})
+
 		const { items, loading, error, totalPages, totalCount } = useItems(
 			collection,
 			{
 				sort: ref(["-date_created"]),
 				limit,
-				fields: ref([
-					"*",
-					"task.item:project.Name",
-					"task.item:timesheet_options.Name",
-				]),
+				fields: ref(["*", "*.*"]),
 				filter,
 				search,
 				page: ref(1),
@@ -54,6 +55,7 @@ export default defineLayout({
 			totalPages,
 			totalCount,
 			limit,
+			settings,
 		}
 	},
 })

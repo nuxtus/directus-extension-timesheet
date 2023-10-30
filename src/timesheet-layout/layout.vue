@@ -3,7 +3,6 @@
 		<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
 			:totalTimeInSec="totalTime" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
 		<div>
-			{{ items }}
 			<v-table v-if="items != undefined && items.length > 0" class="table" v-model:headers="tableHeaders"
 				:items="items" :show-resize="true" fixed-header @click:row="editTimesheetEntry" :allowHeaderReorder="true"
 				noItemsText="You have not recorded any times yet" itemKey="id" @update:sort="resort" :sort="sort">
@@ -28,6 +27,9 @@
 							return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
 						})() : '--' }}
 				</template>
+				<template #[`item.task_id`]="{ item }">
+					{{ getTaskById(item.task_id).text }}
+				</template>
 			</v-table>
 			<div class="paginationWrapper" v-if="items.length > 0">
 				<v-pagination class="pagination" :v-model="items" :length="totalPages" :totalVisible="3" :modelValue="page"
@@ -38,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Timer from './timer.vue'
 import { useApi } from '@directus/extensions-sdk'
@@ -82,7 +84,8 @@ let props = defineProps({
 	totalCount: {
 		type: Number,
 		required: true
-	}
+	},
+	settings: Array
 })
 
 function getTodaysTimers() {
@@ -118,45 +121,64 @@ function getTodaysTimers() {
 getTodaysTimers()
 
 let tasks = ref([])
-const projectCollection = 'Projects' // TODO: Make this configurable
-api.get(`/items/${projectCollection}?sort=Name`).then((response) => {
-	tasks.value = response.data.data.map(project => ({
-		value: project.id,
-		text: project.Name,
-		collection: projectCollection
+
+// Wait for settings to load and then fetch the tasks
+watchEffect(async () => {
+	if (Object.keys(props.settings).length === 0) { return }
+	const response = await api.get(`/items/${props.settings.task_collection}?sort=${props.settings.task_collection_display_field}`)
+	const result = response.data.data.map(task => ({
+		value: task.id,
+		text: task[props.settings.task_collection_display_field]
 	}))
-	console.log(tasks.value)
-	api.get(`/items/timesheet_options?sort=Name`).then((response) => {
-		const options = response.data.data.map(option => ({
-			value: option.id,
-			text: option.Name,
-			collection: 'timesheet_options'
-		}))
-		tasks.value = tasks.value.concat(options)
-		console.log(tasks.value)
-	})
+	tasks.value = result
 })
+
+function getTaskById(id): Task {
+	let task: Task = tasks.value.find(task => task.value === id)
+	if (task === undefined) {
+		task = {
+			text: 'unknown'
+		}
+	}
+	return task
+}
+
+function updateItems() {
+	const response = await api({
+		method: 'search', url: `/items/${props.collection}`, data: {
+			query: {
+				filter: props.filter,
+				search: props.search,
+				page: page,
+				sort: sort.value,
+				limit: props.limit,
+				fields: ["*", `${props.settings.task_collection}.${props.settings.task_collection_display_field}`]
+			},
+		}
+	})
+
+	props.items = response.data.data
+}
+
+// TODO: Combine these 2 functions
+async function paginate(pageMove) {
+	page.value = pageMove
+	updateItems()
+}
+
+async function resort(sortedBy) {
+	sort = ref(sortedBy)
+	updateItems()
+}
 
 function createTimeEntry(details) {
 	api.post(`/items/${props.collection}`, {
 		start_time: new Date(),
-		task: {
-			"create": [
-				{
-					"timesheets_id": "+",
-					"collection": "${details.task.collection}",
-					"item": {
-						"id": details.task.value
-					}
-				}
-			],
-			"update": [],
-			"delete": []
-		}
+		task_id: details.task
 	}).then((response) => {
 		currentTimer.value = response.data.data
 		// Need to look up the task name
-		let taskIndex = tasks.value.findIndex(task => task.value === currentTimer.value.task.value && task.collection === currentTimer.value.task.collection)
+		let taskIndex = tasks.value.findIndex(task => task.value === currentTimer.value.task)
 		if (taskIndex !== -1) {
 			currentTimer.value.task = { name: tasks.value[taskIndex].text }
 		}
@@ -218,49 +240,12 @@ const tableHeaders = ref<Header[]>([
 	},
 	{
 		text: "Task",
-		value: 'task',
+		value: 'task_id',
 		sortable: true,
 		align: 'left',
 		description: null,
 	}
 ])
-
-async function paginate(pageMove) {
-	page = pageMove
-
-	const response = await api({
-		method: 'search', url: `/items/${props.collection}`, data: {
-			query: {
-				filter: props.filter,
-				search: props.search,
-				page: page,
-				sort: sort.value,
-				limit: props.limit,
-				fields: ["*", "task.item:project.Name", "task.item:timesheet_options.Name"]
-			},
-		}
-	})
-
-	props.items = response.data.data
-}
-
-async function resort(sortedBy) {
-	const response = await api({
-		method: 'search', url: `/items/${props.collection}`, data: {
-			query: {
-				filter: props.filter,
-				search: props.search,
-				page: page,
-				sort: sortedBy ? (sortedBy.desc ? `-${sortedBy.by}` : sortedBy.by) : '',
-				limit: props.limit,
-				fields: ["*", "task.item:project.Name", "task.item:timesheet_options.Name"]
-			},
-		}
-	})
-
-	props.items = response.data.data
-	sort = ref(sortedBy)
-}
 
 // Move to edit timesheet entry page
 function editTimesheetEntry(item) {
