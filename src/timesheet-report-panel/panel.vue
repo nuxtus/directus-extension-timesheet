@@ -1,6 +1,9 @@
 <template>
 	<div class="text" :class="{ 'has-header': showHeader }">
-		<v-select id="userSelect" v-model="user" :items="users" placeholder="User" />
+		<div class="dropdownWrapper">
+			<v-select id="userSelect" v-model="user" :items="users" placeholder="User" />
+			<v-select id="rangeSelect" v-model="range" :items="ranges" placeholder="Time range" />
+		</div>
 		<v-table v-if="timeEntries.length > 0" class="table" v-model:headers="tableHeaders" :items="timeEntries"
 			fixed-header :allowHeaderReorder="true" noItemsText="You have not recorded any times yet" itemKey="id">
 			<template #[`item.start_time`]="{ item }">
@@ -34,7 +37,21 @@ import { ref, watch } from 'vue'
 
 const api = useApi()
 let users = ref([{ value: "all", text: "All" }])
-let user = ref(null)
+let user = ref('all')
+let range = ref('currentFortnight')
+let ranges = [{
+	value: 'currentFortnight',
+	text: 'Current fortnight'
+},
+{
+	value: 'lastFortnight',
+	text: 'Last fortnight'
+},
+{
+	value: 'lastMonth',
+	text: 'Last month'
+},
+]
 
 api.get('/users').then((response) => {
 	response.data.data.forEach(user => {
@@ -46,11 +63,34 @@ let timeEntries = ref([])
 
 watch(user, () => {
 	if (user.value) {
-		let filter = '?fields=*,task.name'
-		if (user.value !== "all") {
-			filter += `&filter[user_created][_eq]=${user.value}`
+		let query = '?fields=*'
+		switch (range.value) {
+			case 'currentFortnight':
+				let currentFortnightStart = new Date()
+				currentFortnightStart.setDate(currentFortnightStart.getDate() - currentFortnightStart.getDay() + 1)
+				query += `&filter[start_date][_gte]=${currentFortnightStart.toISOString()}`
+				break
+			case 'lastFortnight':
+				let lastFortnightStart = new Date()
+				lastFortnightStart.setDate(lastFortnightStart.getDate() - lastFortnightStart.getDay() - 13)
+				query += `&filter[start_date][_gte]=${lastFortnightStart.toISOString()}`
+				let lastFortnightEnd = new Date(lastFortnightStart)
+				lastFortnightEnd.setDate(lastFortnightEnd.getDate() + 14)
+				query += `&filter[start_date][_lt]=${lastFortnightEnd.toISOString()}`
+				break
+			case 'lastMonth':
+				let lastMonthStart = new Date()
+				lastMonthStart.setMonth(lastMonthStart.getMonth() - 1, 1)
+				query += `&filter[start_date][_gte]=${lastMonthStart.toISOString()}`
+				let lastMonthEnd = new Date(lastMonthStart)
+				lastMonthEnd.setMonth(lastMonthEnd.getMonth() + 1, 0)
+				query += `&filter[start_date][_lt]=${lastMonthEnd.toISOString()}`
+				break
 		}
-		api.get(`/items/timesheets${filter}`).then((response) => {
+		if (user.value !== "all") {
+			query += `&filter[user_created][_eq]=${user.value}`
+		}
+		api.get(`/items/timesheets${query}`).then((response) => {
 			timeEntries.value = response.data.data
 		})
 	}
@@ -82,7 +122,7 @@ const tableHeaders = ref<Header[]>([
 	},
 	{
 		text: "Task",
-		value: 'task.name',
+		value: 'task_id',
 		sortable: true,
 		align: 'left',
 		description: null,
@@ -109,6 +149,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.dropdownWrapper {
+	display: flex;
+	gap: 20px;
+}
+
 .text {
 	padding: 12px;
 }
