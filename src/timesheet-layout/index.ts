@@ -35,7 +35,7 @@ export default defineLayout({
 			{
 				sort: ref(["-date_created"]),
 				limit,
-				fields: ref(["*", "*.*"]),
+				fields: ref(["*"]),
 				filter,
 				search,
 				page: ref(1),

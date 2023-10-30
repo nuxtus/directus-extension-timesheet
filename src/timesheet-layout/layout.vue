@@ -143,7 +143,7 @@ function getTaskById(id): Task {
 	return task
 }
 
-function updateItems() {
+async function updateItems() {
 	const response = await api({
 		method: 'search', url: `/items/${props.collection}`, data: {
 			query: {
@@ -152,7 +152,7 @@ function updateItems() {
 				page: page,
 				sort: sort.value,
 				limit: props.limit,
-				fields: ["*", `${props.settings.task_collection}.${props.settings.task_collection_display_field}`]
+				fields: ["*"]
 			},
 		}
 	})
@@ -162,12 +162,12 @@ function updateItems() {
 
 async function paginate(pageMove) {
 	page.value = pageMove
-	updateItems()
+	await updateItems()
 }
 
 async function resort(sortedBy) {
 	sort = ref(sortedBy)
-	updateItems()
+	await updateItems()
 }
 
 function createTimeEntry(details) {

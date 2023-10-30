@@ -1,1 +1,2 @@
 ☐ Change the ts_settings fields to be dropdowns instead of text fields, see https://docs.directus.io/guides/extensions/interfaces-relational-dropdown.html
+☐ Split timesheet table to its own component
