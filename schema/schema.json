@@ -117,14 +117,14 @@
             "schema": {}
         },
         {
-            "collection": "directus_migrations",
+            "collection": "directus_translations",
             "meta": {
                 "system": true,
-                "collection": "directus_migrations",
+                "collection": "directus_translations",
                 "hidden": false,
                 "singleton": false,
                 "icon": null,
-                "note": "$t:directus_collection.directus_migrations",
+                "note": "$t:directus_collection.directus_translations",
                 "translations": null,
                 "display_template": null,
                 "accountability": "all"
@@ -516,6 +516,53 @@
             }
         },
         {
+            "collection": "timesheets",
+            "field": "task_id",
+            "type": "integer",
+            "schema": {
+                "name": "task_id",
+                "table": "timesheets",
+                "schema": "public",
+                "data_type": "integer",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 32,
+                "numeric_scale": 0,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "timesheets",
+                "field": "task_id",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "min": 1
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": true,
+                "sort": 9,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
             "collection": "ts_tasks",
             "field": "id",
             "type": "integer",
@@ -847,19 +894,51 @@
             }
         },
         {
-            "collection": "directus_migrations",
-            "field": "version",
-            "type": "string",
+            "collection": "ts_settings",
+            "field": "nine_day_fortnight_note",
+            "type": "alias",
+            "schema": null,
+            "meta": {
+                "collection": "ts_settings",
+                "field": "nine_day_fortnight_note",
+                "special": [
+                    "alias",
+                    "no-data"
+                ],
+                "interface": "presentation-notice",
+                "options": {
+                    "icon": "date_range",
+                    "text": "If your organisation has 9 day fortnights you can add a `nineDayFortnightStart` field to the user collection. This should then store a Monday representing the start of the users full fortnight and will be used to calculate 9DF totals in the timesheet."
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": true,
+                "hidden": false,
+                "sort": 6,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "directus_translations",
+            "field": "id",
+            "type": "uuid",
             "schema": {
-                "name": "version",
-                "table": "directus_migrations",
+                "name": "id",
+                "table": "directus_translations",
                 "schema": "public",
-                "data_type": "character varying",
+                "data_type": "uuid",
                 "is_nullable": false,
                 "generation_expression": null,
                 "default_value": null,
                 "is_generated": false,
-                "max_length": 255,
+                "max_length": null,
                 "comment": null,
                 "numeric_precision": null,
                 "numeric_scale": null,
@@ -872,15 +951,17 @@
             },
             "meta": {
                 "system": true,
-                "collection": "directus_migrations",
-                "field": "version",
-                "special": null,
+                "collection": "directus_translations",
+                "field": "id",
+                "special": [
+                    "uuid"
+                ],
                 "interface": null,
                 "options": null,
                 "display": null,
                 "display_options": null,
                 "readonly": false,
-                "hidden": false,
+                "hidden": true,
                 "sort": 1,
                 "width": "full",
                 "group": null,
@@ -891,12 +972,12 @@
             }
         },
         {
-            "collection": "directus_migrations",
-            "field": "name",
+            "collection": "directus_translations",
+            "field": "key",
             "type": "string",
             "schema": {
-                "name": "name",
-                "table": "directus_migrations",
+                "name": "key",
+                "table": "directus_translations",
                 "schema": "public",
                 "data_type": "character varying",
                 "is_nullable": false,
@@ -916,36 +997,83 @@
             },
             "meta": {
                 "system": true,
-                "collection": "directus_migrations",
-                "field": "name",
+                "collection": "directus_translations",
+                "field": "key",
                 "special": null,
-                "interface": null,
-                "options": null,
+                "interface": "input",
+                "options": {
+                    "font": "monospace",
+                    "placeholder": "Enter a key..."
+                },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
                 "hidden": false,
                 "sort": 2,
-                "width": "full",
+                "width": "half",
                 "group": null,
                 "translations": null,
                 "note": null,
                 "conditions": null,
-                "required": false
+                "required": true
             }
         },
         {
-            "collection": "directus_migrations",
-            "field": "timestamp",
-            "type": "timestamp",
+            "collection": "directus_translations",
+            "field": "language",
+            "type": "string",
             "schema": {
-                "name": "timestamp",
-                "table": "directus_migrations",
+                "name": "language",
+                "table": "directus_translations",
                 "schema": "public",
-                "data_type": "timestamp with time zone",
-                "is_nullable": true,
+                "data_type": "character varying",
+                "is_nullable": false,
                 "generation_expression": null,
-                "default_value": "CURRENT_TIMESTAMP",
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_translations",
+                "field": "language",
+                "special": null,
+                "interface": "system-language",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 3,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true
+            }
+        },
+        {
+            "collection": "directus_translations",
+            "field": "value",
+            "type": "text",
+            "schema": {
+                "name": "value",
+                "table": "directus_translations",
+                "schema": "public",
+                "data_type": "text",
+                "is_nullable": false,
+                "generation_expression": null,
+                "default_value": null,
                 "is_generated": false,
                 "max_length": null,
                 "comment": null,
@@ -960,22 +1088,24 @@
             },
             "meta": {
                 "system": true,
-                "collection": "directus_migrations",
-                "field": "timestamp",
+                "collection": "directus_translations",
+                "field": "value",
                 "special": null,
-                "interface": null,
-                "options": null,
+                "interface": "input-multiline",
+                "options": {
+                    "placeholder": "Enter a value..."
+                },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
                 "hidden": false,
-                "sort": 3,
+                "sort": 4,
                 "width": "full",
                 "group": null,
                 "translations": null,
                 "note": null,
                 "conditions": null,
-                "required": false
+                "required": true
             }
         }
     ],

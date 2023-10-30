@@ -160,7 +160,6 @@ function updateItems() {
 	props.items = response.data.data
 }
 
-// TODO: Combine these 2 functions
 async function paginate(pageMove) {
 	page.value = pageMove
 	updateItems()

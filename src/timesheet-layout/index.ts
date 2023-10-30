@@ -15,7 +15,7 @@ export default defineLayout({
 		actions: () => null,
 	},
 	setup(props) {
-		const name = ref("TD Timesheets")
+		const name = ref("Timesheets")
 		const { collection, filter, search } = toRefs(props)
 		const {
 			info,
