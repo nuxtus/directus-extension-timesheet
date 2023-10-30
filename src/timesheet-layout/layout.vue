@@ -3,43 +3,15 @@
 		<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
 			:totalTimeInSec="totalTime" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
 		<div>
-			<v-table v-if="items != undefined && items.length > 0" class="table" v-model:headers="tableHeaders"
-				:items="items" :show-resize="true" fixed-header @click:row="editTimesheetEntry" :allowHeaderReorder="true"
-				noItemsText="You have not recorded any times yet" itemKey="id" @update:sort="resort" :sort="sort">
-				<template #[`item.start_time`]="{ item }">
-					{{ new Date(item.start_time).toLocaleString('en-GB', {
-						year: 'numeric', month: '2-digit', day:
-							'2-digit', hour: '2-digit', minute: '2-digit'
-					}) }}
-				</template>
-				<template #[`item.end_time`]="{ item }">
-					{{ item.end_time ? new Date(item.end_time).toLocaleString('en-GB', {
-						year: 'numeric', month: '2-digit', day:
-							'2-digit', hour: '2-digit', minute: '2-digit'
-					}) : '--' }}
-				</template>
-				<template #[`item.total`]="{ item }">
-					{{ item.end_time ?
-						(() => {
-							let diff = new Date(item.end_time) - new Date(item.start_time)
-							let hours = Math.floor(diff / 1000 / 60 / 60)
-							let minutes = Math.floor((diff / 1000 / 60) % 60)
-							return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
-						})() : '--' }}
-				</template>
-				<template #[`item.task_id`]="{ item }">
-					{{ getTaskById(item.task_id).text }}
-				</template>
-			</v-table>
-			<div class="paginationWrapper" v-if="items.length > 0">
-				<v-pagination class="pagination" :v-model="items" :length="totalPages" :totalVisible="3" :modelValue="page"
-					:showFirstLast="true" @update:modelValue="paginate" />
-			</div>
+			<TimesheetTable :items="items" :tasks="tasks" :sort="sort" :total-pages="totalPages"
+				@row-click="editTimesheetEntry" @update-sort="resort" @update-page="paginate">
+			</TimesheetTable>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import TimesheetTable from '../components/TimesheetTable.vue'
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Timer from './timer.vue'
@@ -133,16 +105,6 @@ watchEffect(async () => {
 	tasks.value = result
 })
 
-function getTaskById(id): Task {
-	let task: Task = tasks.value.find(task => task.value === id)
-	if (task === undefined) {
-		task = {
-			text: 'unknown'
-		}
-	}
-	return task
-}
-
 async function updateItems() {
 	const response = await api({
 		method: 'search', url: `/items/${props.collection}`, data: {
@@ -213,39 +175,6 @@ setInterval(() => {
 	}
 }, 60000) // Check every minute
 
-// Table layout
-const tableHeaders = ref<Header[]>([
-	{
-		text: 'Start time',
-		value: 'start_time',
-		width: 200,
-		sortable: true,
-		align: 'left',
-		description: null,
-	},
-	{
-		text: 'End time',
-		value: 'end_time',
-		sortable: true,
-		align: 'left',
-		description: null,
-	},
-	{
-		text: "Total",
-		value: 'total',
-		sortable: false,
-		align: 'left',
-		description: null,
-	},
-	{
-		text: "Task",
-		value: 'task_id',
-		sortable: true,
-		align: 'left',
-		description: null,
-	}
-])
-
 // Move to edit timesheet entry page
 function editTimesheetEntry(item) {
 	router.push(`/content/${props.collection}/${item.item.id}`)
@@ -291,21 +220,3 @@ export default defineComponent({
 	inheritAttrs: false,
 })
 </script>
-
-<style scoped>
-.table {
-	/* min-width: calc(100% - var(--content-padding)) !important; */
-	margin-right: var(--content-padding);
-	margin-left: var(--content-padding);
-}
-
-.paginationWrapper {
-	display: flex;
-}
-
-.pagination {
-	margin-top: 10px;
-	margin-left: auto;
-	margin-right: 40px;
-}
-</style>

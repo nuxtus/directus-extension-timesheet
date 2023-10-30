@@ -2,7 +2,7 @@ import PanelComponent from "./panel.vue"
 import { definePanel } from "@directus/extensions-sdk"
 
 export default definePanel({
-	id: "td_timesheet_report",
+	id: "timesheet_report_panel",
 	name: "Timesheet Report",
 	icon: "timer",
 	description: "Summarise staff timesheet information.",
