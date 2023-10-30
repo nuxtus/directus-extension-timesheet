@@ -4,34 +4,14 @@
 			<v-select id="userSelect" v-model="user" :items="users" placeholder="User" />
 			<v-select id="rangeSelect" v-model="range" :items="ranges" placeholder="Time range" />
 		</div>
-		<v-table v-if="timeEntries.length > 0" class="table" v-model:headers="tableHeaders" :items="timeEntries"
-			fixed-header :allowHeaderReorder="true" noItemsText="You have not recorded any times yet" itemKey="id">
-			<template #[`item.start_time`]="{ item }">
-				{{ new Date(item.start_time).toLocaleString('en-GB', {
-					year: 'numeric', month: '2-digit', day:
-						'2-digit', hour: '2-digit', minute: '2-digit'
-				}) }}
-			</template>
-			<template #[`item.end_time`]="{ item }">
-				{{ item.end_time ? new Date(item.end_time).toLocaleString('en-GB', {
-					year: 'numeric', month: '2-digit', day:
-						'2-digit', hour: '2-digit', minute: '2-digit'
-				}) : '--' }}
-			</template>
-			<template #[`item.total`]="{ item }">
-				{{ item.end_time ?
-					(() => {
-						let diff = new Date(item.end_time) - new Date(item.start_time)
-						let hours = Math.floor(diff / 1000 / 60 / 60)
-						let minutes = Math.floor((diff / 1000 / 60) % 60)
-						return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
-					})() : '--' }}
-			</template>
-		</v-table>
+		<div class="scroll">
+			<TimesheetTable :items="timeEntries"></TimesheetTable>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import TimesheetTable from '../components/TimesheetTable.vue'
 import { useApi, useItems, useStores } from '@directus/extensions-sdk'
 import { ref, watch } from 'vue'
 
@@ -64,29 +44,29 @@ let timeEntries = ref([])
 watch(user, () => {
 	if (user.value) {
 		let query = '?fields=*'
-		switch (range.value) {
-			case 'currentFortnight':
-				let currentFortnightStart = new Date()
-				currentFortnightStart.setDate(currentFortnightStart.getDate() - currentFortnightStart.getDay() + 1)
-				query += `&filter[start_date][_gte]=${currentFortnightStart.toISOString()}`
-				break
-			case 'lastFortnight':
-				let lastFortnightStart = new Date()
-				lastFortnightStart.setDate(lastFortnightStart.getDate() - lastFortnightStart.getDay() - 13)
-				query += `&filter[start_date][_gte]=${lastFortnightStart.toISOString()}`
-				let lastFortnightEnd = new Date(lastFortnightStart)
-				lastFortnightEnd.setDate(lastFortnightEnd.getDate() + 14)
-				query += `&filter[start_date][_lt]=${lastFortnightEnd.toISOString()}`
-				break
-			case 'lastMonth':
-				let lastMonthStart = new Date()
-				lastMonthStart.setMonth(lastMonthStart.getMonth() - 1, 1)
-				query += `&filter[start_date][_gte]=${lastMonthStart.toISOString()}`
-				let lastMonthEnd = new Date(lastMonthStart)
-				lastMonthEnd.setMonth(lastMonthEnd.getMonth() + 1, 0)
-				query += `&filter[start_date][_lt]=${lastMonthEnd.toISOString()}`
-				break
-		}
+		// switch (range.value) {
+		// 	case 'currentFortnight':
+		// 		let currentFortnightStart = new Date()
+		// 		currentFortnightStart.setDate(currentFortnightStart.getDate() - currentFortnightStart.getDay() + 1)
+		// 		query += `&filter[start_time][_gte]=${currentFortnightStart.toISOString()}`
+		// 		break
+		// 	case 'lastFortnight':
+		// 		let lastFortnightStart = new Date()
+		// 		lastFortnightStart.setDate(lastFortnightStart.getDate() - lastFortnightStart.getDay() - 13)
+		// 		query += `&filter[start_time][_gte]=${lastFortnightStart.toISOString()}`
+		// 		let lastFortnightEnd = new Date(lastFortnightStart)
+		// 		lastFortnightEnd.setDate(lastFortnightEnd.getDate() + 14)
+		// 		query += `&filter[start_time][_lt]=${lastFortnightEnd.toISOString()}`
+		// 		break
+		// 	case 'lastMonth':
+		// 		let lastMonthStart = new Date()
+		// 		lastMonthStart.setMonth(lastMonthStart.getMonth() - 1, 1)
+		// 		query += `&filter[start_time][_gte]=${lastMonthStart.toISOString()}`
+		// 		let lastMonthEnd = new Date(lastMonthStart)
+		// 		lastMonthEnd.setMonth(lastMonthEnd.getMonth() + 1, 0)
+		// 		query += `&filter[start_time][_lt]=${lastMonthEnd.toISOString()}`
+		// 		break
+		// }
 		if (user.value !== "all") {
 			query += `&filter[user_created][_eq]=${user.value}`
 		}
@@ -95,39 +75,6 @@ watch(user, () => {
 		})
 	}
 }, { immediate: true })
-
-// Table layout
-const tableHeaders = ref<Header[]>([
-	{
-		text: 'Start time',
-		value: 'start_time',
-		width: 200,
-		sortable: true,
-		align: 'left',
-		description: null,
-	},
-	{
-		text: 'End time',
-		value: 'end_time',
-		sortable: true,
-		align: 'left',
-		description: null,
-	},
-	{
-		text: "Total",
-		value: 'total',
-		sortable: false,
-		align: 'left',
-		description: null,
-	},
-	{
-		text: "Task",
-		value: 'task_id',
-		sortable: true,
-		align: 'left',
-		description: null,
-	}
-])
 </script>
 
 <script lang="ts">
@@ -161,4 +108,18 @@ export default defineComponent({
 .text.has-header {
 	padding: 0 12px;
 }
+
+.text {
+	height: 100%;
+}
+
+.scroll {
+	overflow: scroll;
+	height: 100%;
+	margin-top: var(--content-padding);
+}
+
+/* .panel-container {
+	overflow: scroll;
+} */
 </style>

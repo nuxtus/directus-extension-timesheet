@@ -23,7 +23,7 @@
 					return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2)
 				})() : '--' }}
 		</template>
-		<template #[`item.task_id`]="{ item }">
+		<template #[`item.task_id`]="{ item }" v-if="tasks">
 			{{ getTaskById(item.task_id).text }}
 		</template>
 	</v-table>
@@ -52,7 +52,7 @@ let props = defineProps({
 	},
 	tasks: {
 		type: Array,
-		required: true
+		default: undefined
 	}
 })
 
@@ -71,6 +71,7 @@ const handlePageUpdate = function (pageValue) {
 
 // Match task_id to a task
 function getTaskById(id): Task {
+	if (props.tasks === undefined) return
 	let task: Task = props.tasks.find(task => task.value === id)
 	if (task === undefined) {
 		task = {
@@ -81,7 +82,7 @@ function getTaskById(id): Task {
 }
 
 // Table layout
-const tableHeaders = ref<Header[]>([
+let tableHeaders = ref<Header[]>([
 	{
 		text: 'Start time',
 		value: 'start_time',
@@ -103,15 +104,18 @@ const tableHeaders = ref<Header[]>([
 		sortable: false,
 		align: 'left',
 		description: null,
-	},
-	{
-		text: "Task",
-		value: 'task_id',
-		sortable: true,
-		align: 'left',
-		description: null,
 	}
 ])
+
+if (props.tasks !== undefined) {
+	tableHeaders.value.push({
+		text: 'Task',
+		value: 'task_id',
+		sortable: false,
+		align: 'left',
+		description: null,
+	})
+}
 </script>
 
 <style scoped>
