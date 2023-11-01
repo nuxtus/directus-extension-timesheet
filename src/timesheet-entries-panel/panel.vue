@@ -3,6 +3,7 @@
 		<div class="dropdownWrapper">
 			<v-select id="userSelect" v-model="user" :items="usersSelect" placeholder="User" />
 			<DateTime :value="startDate" type="date" @input="setDate"></DateTime>
+			<button @click="downloadCSV" title="Download CSV" alt="Download CSV"><v-icon name="download"></v-icon></button>
 		</div>
 		<div class="scroll">
 			<TimesheetTable :items="timeEntries" :sort="sort" @update-sort="resort"></TimesheetTable>
@@ -16,6 +17,7 @@ import DateTime from '../components/DateTime.vue'
 import { useApi } from '@directus/extensions-sdk'
 import { ref, watch } from 'vue'
 import { isFuture } from 'date-fns'
+import { saveAs } from 'file-saver'
 
 const api = useApi()
 let users = ref([{
@@ -62,6 +64,17 @@ function fetchTimesheets() {
 
 function resort(sortBy) {
 	sort.value = sortBy
+}
+
+function downloadCSV() {
+	const replacer = (key, value) => value === null ? '' : value
+	const header = Object.keys(timeEntries.value[0])
+	let csv = timeEntries.value.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+	csv.unshift(header.join(','))
+	csv = csv.join('\r\n')
+
+	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+	saveAs(blob, 'timeEntries.csv')
 }
 
 watch(startDate, (_newDate, oldDate) => {
