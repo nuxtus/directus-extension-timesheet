@@ -5,7 +5,7 @@
 			<DateTime :value="startDate" type="date" @input="setDate"></DateTime>
 		</div>
 		<div class="scroll">
-			<TimesheetTable :items="timeEntries"></TimesheetTable>
+			<TimesheetTable :items="timeEntries" :sort="sort" @update-sort="resort"></TimesheetTable>
 		</div>
 	</div>
 </template>
@@ -26,6 +26,7 @@ let users = ref([{
 let usersSelect = ref([])
 let user = ref('all')
 let startDate = ref(null)
+let sort = ref({ by: 'start_time', desc: false })
 
 api.get('/users').then((response) => {
 	users.value = [
@@ -51,9 +52,16 @@ function fetchTimesheets() {
 	if (user.value !== "all") {
 		query += `&filter[user_created][_eq]=${user.value}`
 	}
+	if (sort.value) {
+		query += `&sort=${sort.value.desc ? '-' : ''}${sort.value.by}`
+	}
 	api.get(`/items/timesheets${query}`).then((response) => {
 		timeEntries.value = response.data.data
 	})
+}
+
+function resort(sortBy) {
+	sort.value = sortBy
 }
 
 watch(startDate, (_newDate, oldDate) => {
@@ -71,6 +79,10 @@ watch(user, () => {
 		fetchTimesheets()
 	}
 }, { immediate: true })
+
+watch(sort, () => {
+	fetchTimesheets()
+})
 </script>
 
 <script lang="ts">
