@@ -1,0 +1,1 @@
+A dashboard panel that allows configuration of a specific user and timeframe and displays total hours for this time.
