@@ -19,8 +19,13 @@
 			},
 			{
 				"type": "panel",
-				"name": "timesheet-report-panel",
-				"source": "src/timesheet-report-panel/index.ts"
+				"name": "timesheet-entries-panel",
+				"source": "src/timesheet-entries-panel/index.ts"
+			},
+			{
+				"type": "panel",
+				"name": "timesheet-9df-summary-panel",
+				"source": "src/timesheet-9df-summary-panel/index.ts"
 			}
 		]
 	},

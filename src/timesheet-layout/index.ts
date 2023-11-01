@@ -25,6 +25,13 @@ export default defineLayout({
 
 		const limit = ref(20)
 
+		// Added this to assist with users who have permission to see all timesheets to default to only their own, it gets clobbered if user then uses the filter
+		filter.value = {
+			user_created: {
+				_eq: "$CURRENT_USER",
+			},
+		}
+
 		// Get the timesheet settings from ts_settings
 		const { items: settings } = useItems(ref("ts_settings"), {
 			fields: ["task_collection", "task_collection_display_field"],

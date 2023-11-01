@@ -57,4 +57,7 @@ module.exports = async function(data) {
 
 ## Permissions
 
-It's up to you to manually define the permissions for CRUD operations within Directus. I usually lock users to only being able to CRU the start_time, end_time and project fields.
+It's up to you to manually define the permissions for CRUD operations within Directus. I usually: 
+
+1. Lock users to only being able to CRU the start_time, end_time and project fields.
+2. Add permission to only allow users to view their own timesheets
