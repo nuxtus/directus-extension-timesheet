@@ -16,7 +16,7 @@ import TimesheetTable from '../components/TimesheetTable.vue'
 import DateTime from '../components/DateTime.vue'
 import { useApi } from '@directus/extensions-sdk'
 import { ref, watch } from 'vue'
-import { isFuture } from 'date-fns'
+import { isFuture, subDays } from 'date-fns'
 import { saveAs } from 'file-saver'
 
 const api = useApi()
@@ -27,7 +27,7 @@ let users = ref([{
 }])
 let usersSelect = ref([])
 let user = ref('all')
-let startDate = ref(null)
+let startDate = ref(subDays(new Date().setHours(0, 0, 0, 0), 30).toISOString())
 let sort = ref({ by: 'start_time', desc: false })
 
 api.get('/users').then((response) => {
