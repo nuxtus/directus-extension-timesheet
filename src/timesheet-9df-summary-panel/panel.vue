@@ -39,11 +39,12 @@ api.get('/users').then((response) => {
 	})
 })
 
-watch(user, () => {
+watch(user, (_newValue, oldValue) => {
 	if (user.value) {
 		let userDetails = users.value.find(userFromList => userFromList.id === user.value)
 		if (userDetails.nineDayFortnight === null) {
 			alert("User does not have a 9 day fortnight start date entered. Cannot continue.")
+			user.value = oldValue
 			return
 		}
 
