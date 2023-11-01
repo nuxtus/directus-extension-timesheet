@@ -117,17 +117,20 @@
             "schema": {}
         },
         {
-            "collection": "directus_translations",
+            "collection": "directus_users",
             "meta": {
                 "system": true,
-                "collection": "directus_translations",
+                "collection": "directus_users",
                 "hidden": false,
                 "singleton": false,
-                "icon": null,
-                "note": "$t:directus_collection.directus_translations",
+                "icon": "people_alt",
+                "note": "$t:directus_collection.directus_users",
                 "translations": null,
-                "display_template": null,
-                "accountability": "all"
+                "display_template": "{{ first_name }} {{ last_name }}",
+                "accountability": "all",
+                "archive_field": "status",
+                "archive_value": "archived",
+                "unarchive_value": "draft"
             },
             "schema": {}
         }
@@ -503,7 +506,7 @@
                 "display": null,
                 "display_options": null,
                 "readonly": false,
-                "hidden": false,
+                "hidden": true,
                 "sort": 8,
                 "width": "full",
                 "translations": null,
@@ -926,12 +929,1073 @@
             }
         },
         {
-            "collection": "directus_translations",
+            "collection": "directus_users",
+            "field": "first_name",
+            "type": "string",
+            "schema": {
+                "name": "first_name",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 50,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "first_name",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "account_circle"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 1,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "last_name",
+            "type": "string",
+            "schema": {
+                "name": "last_name",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 50,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "last_name",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "account_circle"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 2,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "email",
+            "type": "string",
+            "schema": {
+                "name": "email",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 128,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": true,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "email",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "email"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 3,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "password",
+            "type": "hash",
+            "schema": {
+                "name": "password",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "password",
+                "special": [
+                    "hash",
+                    "conceal"
+                ],
+                "interface": "input-hash",
+                "options": {
+                    "iconRight": "lock",
+                    "masked": true
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 4,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "avatar",
+            "type": "uuid",
+            "schema": {
+                "name": "avatar",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "uuid",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "avatar",
+                "special": null,
+                "interface": "file",
+                "options": null,
+                "display": "image",
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 5,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "location",
+            "type": "string",
+            "schema": {
+                "name": "location",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "location",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "place"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 6,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "title",
+            "type": "string",
+            "schema": {
+                "name": "title",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 50,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "title",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "work"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 7,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "description",
+            "type": "text",
+            "schema": {
+                "name": "description",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "text",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "description",
+                "special": null,
+                "interface": "input-multiline",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 8,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "tags",
+            "type": "json",
+            "schema": {
+                "name": "tags",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "json",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "tags",
+                "special": [
+                    "cast-json"
+                ],
+                "interface": "tags",
+                "options": {
+                    "iconRight": "local_offer"
+                },
+                "display": "labels",
+                "display_options": {
+                    "choices": null,
+                    "format": false
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 9,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "preferences_divider",
+            "type": "alias",
+            "schema": null,
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "preferences_divider",
+                "special": [
+                    "alias",
+                    "no-data"
+                ],
+                "interface": "presentation-divider",
+                "options": {
+                    "icon": "face",
+                    "title": "User Preferences"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 10,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "language",
+            "type": "string",
+            "schema": {
+                "name": "language",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "language",
+                "special": null,
+                "interface": "system-language",
+                "options": {
+                    "includeProjectDefault": true
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 11,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "tfa_secret",
+            "type": "string",
+            "schema": {
+                "name": "tfa_secret",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "tfa_secret",
+                "special": [
+                    "conceal"
+                ],
+                "interface": "system-mfa-setup",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 12,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "email_notifications",
+            "type": "boolean",
+            "schema": {
+                "name": "email_notifications",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "boolean",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": true,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "email_notifications",
+                "special": [
+                    "cast-boolean"
+                ],
+                "interface": "boolean",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 13,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "theming_divider",
+            "type": "alias",
+            "schema": null,
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "theming_divider",
+                "special": [
+                    "alias",
+                    "no-data"
+                ],
+                "interface": "presentation-divider",
+                "options": {
+                    "icon": "palette",
+                    "title": "Theme"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 14,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "appearance",
+            "type": "string",
+            "schema": {
+                "name": "appearance",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "appearance",
+                "special": null,
+                "interface": "select-dropdown",
+                "options": {
+                    "choices": [
+                        {
+                            "value": null,
+                            "text": "Project Default"
+                        },
+                        {
+                            "value": "auto",
+                            "text": "Automatic (Sync with System)"
+                        },
+                        {
+                            "value": "light",
+                            "text": "Light"
+                        },
+                        {
+                            "value": "dark",
+                            "text": "Dark"
+                        }
+                    ]
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 15,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "theme_light",
+            "type": "string",
+            "schema": {
+                "name": "theme_light",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "theme_light",
+                "special": null,
+                "interface": "system-theme",
+                "options": {
+                    "appearance": "light"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": true,
+                "sort": 16,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "theme_dark",
+            "type": "string",
+            "schema": {
+                "name": "theme_dark",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "theme_dark",
+                "special": null,
+                "interface": "system-theme",
+                "options": {
+                    "appearance": "dark"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": true,
+                "sort": 17,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "theme_light_overrides",
+            "type": "json",
+            "schema": {
+                "name": "theme_light_overrides",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "json",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "theme_light_overrides",
+                "special": [
+                    "cast-json"
+                ],
+                "interface": "system-theme-overrides",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 18,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "theme_dark_overrides",
+            "type": "json",
+            "schema": {
+                "name": "theme_dark_overrides",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "json",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "theme_dark_overrides",
+                "special": [
+                    "cast-json"
+                ],
+                "interface": "system-theme-overrides",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 19,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "admin_divider",
+            "type": "alias",
+            "schema": null,
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "admin_divider",
+                "special": [
+                    "alias",
+                    "no-data"
+                ],
+                "interface": "presentation-divider",
+                "options": {
+                    "icon": "verified_user",
+                    "title": "Admin Options",
+                    "color": "var(--theme--danger)"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 20,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "status",
+            "type": "string",
+            "schema": {
+                "name": "status",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": false,
+                "generation_expression": null,
+                "default_value": "active",
+                "is_generated": false,
+                "max_length": 16,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "status",
+                "special": null,
+                "interface": "select-dropdown",
+                "options": {
+                    "choices": [
+                        {
+                            "text": "Draft",
+                            "value": "draft"
+                        },
+                        {
+                            "text": "Invited",
+                            "value": "invited"
+                        },
+                        {
+                            "text": "Active",
+                            "value": "active"
+                        },
+                        {
+                            "text": "Suspended",
+                            "value": "suspended"
+                        },
+                        {
+                            "text": "Archived",
+                            "value": "archived"
+                        }
+                    ]
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 21,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "role",
+            "type": "uuid",
+            "schema": {
+                "name": "role",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "uuid",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_roles",
+                "foreign_key_column": "id"
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "role",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": {
+                    "template": "{{ name }}"
+                },
+                "display": "related-values",
+                "display_options": {
+                    "template": "{{ name }}"
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 22,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "token",
+            "type": "string",
+            "schema": {
+                "name": "token",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": true,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "token",
+                "special": [
+                    "conceal"
+                ],
+                "interface": "system-token",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 23,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
             "field": "id",
             "type": "uuid",
             "schema": {
                 "name": "id",
-                "table": "directus_translations",
+                "table": "directus_users",
                 "schema": "public",
                 "data_type": "uuid",
                 "is_nullable": false,
@@ -951,18 +2015,20 @@
             },
             "meta": {
                 "system": true,
-                "collection": "directus_translations",
+                "collection": "directus_users",
                 "field": "id",
                 "special": [
                     "uuid"
                 ],
-                "interface": null,
-                "options": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "vpn_key"
+                },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
-                "hidden": true,
-                "sort": 1,
+                "hidden": false,
+                "sort": 24,
                 "width": "full",
                 "group": null,
                 "translations": null,
@@ -972,15 +2038,15 @@
             }
         },
         {
-            "collection": "directus_translations",
-            "field": "key",
+            "collection": "directus_users",
+            "field": "last_page",
             "type": "string",
             "schema": {
-                "name": "key",
-                "table": "directus_translations",
+                "name": "last_page",
+                "table": "directus_users",
                 "schema": "public",
                 "data_type": "character varying",
-                "is_nullable": false,
+                "is_nullable": true,
                 "generation_expression": null,
                 "default_value": null,
                 "is_generated": false,
@@ -997,81 +2063,34 @@
             },
             "meta": {
                 "system": true,
-                "collection": "directus_translations",
-                "field": "key",
+                "collection": "directus_users",
+                "field": "last_page",
                 "special": null,
-                "interface": "input",
-                "options": {
-                    "font": "monospace",
-                    "placeholder": "Enter a key..."
-                },
-                "display": null,
-                "display_options": null,
-                "readonly": false,
-                "hidden": false,
-                "sort": 2,
-                "width": "half",
-                "group": null,
-                "translations": null,
-                "note": null,
-                "conditions": null,
-                "required": true
-            }
-        },
-        {
-            "collection": "directus_translations",
-            "field": "language",
-            "type": "string",
-            "schema": {
-                "name": "language",
-                "table": "directus_translations",
-                "schema": "public",
-                "data_type": "character varying",
-                "is_nullable": false,
-                "generation_expression": null,
-                "default_value": null,
-                "is_generated": false,
-                "max_length": 255,
-                "comment": null,
-                "numeric_precision": null,
-                "numeric_scale": null,
-                "is_unique": false,
-                "is_primary_key": false,
-                "has_auto_increment": false,
-                "foreign_key_schema": null,
-                "foreign_key_table": null,
-                "foreign_key_column": null
-            },
-            "meta": {
-                "system": true,
-                "collection": "directus_translations",
-                "field": "language",
-                "special": null,
-                "interface": "system-language",
+                "interface": null,
                 "options": null,
                 "display": null,
                 "display_options": null,
                 "readonly": false,
                 "hidden": false,
-                "sort": 3,
+                "sort": 25,
                 "width": "half",
                 "group": null,
                 "translations": null,
                 "note": null,
                 "conditions": null,
-                "required": true
+                "required": false
             }
         },
         {
-            "collection": "directus_translations",
-            "field": "value",
-            "type": "text",
+            "collection": "directus_users",
+            "field": "last_access",
+            "type": "timestamp",
             "schema": {
-                "name": "value",
-                "table": "directus_translations",
+                "name": "last_access",
+                "table": "directus_users",
                 "schema": "public",
-                "data_type": "text",
-                "is_nullable": false,
+                "data_type": "timestamp with time zone",
+                "is_nullable": true,
                 "generation_expression": null,
                 "default_value": null,
                 "is_generated": false,
@@ -1088,24 +2107,210 @@
             },
             "meta": {
                 "system": true,
-                "collection": "directus_translations",
-                "field": "value",
+                "collection": "directus_users",
+                "field": "last_access",
                 "special": null,
-                "interface": "input-multiline",
+                "interface": null,
+                "options": null,
+                "display": "datetime",
+                "display_options": {
+                    "relative": true
+                },
+                "readonly": true,
+                "hidden": false,
+                "sort": 26,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "provider",
+            "type": "string",
+            "schema": {
+                "name": "provider",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": false,
+                "generation_expression": null,
+                "default_value": "default",
+                "is_generated": false,
+                "max_length": 128,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "provider",
+                "special": null,
+                "interface": "select-dropdown",
                 "options": {
-                    "placeholder": "Enter a value..."
+                    "choices": [
+                        {
+                            "text": "Default",
+                            "value": "default"
+                        }
+                    ]
                 },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
                 "hidden": false,
-                "sort": 4,
+                "sort": 27,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "external_identifier",
+            "type": "string",
+            "schema": {
+                "name": "external_identifier",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": true,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "external_identifier",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "iconRight": "account_circle"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 28,
+                "width": "half",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "auth_data",
+            "type": "json",
+            "schema": {
+                "name": "auth_data",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "json",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "auth_data",
+                "special": null,
+                "interface": null,
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": true,
+                "sort": 29,
                 "width": "full",
                 "group": null,
                 "translations": null,
                 "note": null,
                 "conditions": null,
-                "required": true
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "nineDayFortnight",
+            "type": "date",
+            "schema": {
+                "name": "nineDayFortnight",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "date",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "directus_users",
+                "field": "nineDayFortnight",
+                "special": null,
+                "interface": "datetime",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 1,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
             }
         }
     ],
@@ -1186,6 +2391,51 @@
                 "junction_field": null,
                 "sort_field": null,
                 "one_deselect_action": "nullify"
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "role",
+            "related_collection": "directus_roles",
+            "schema": {
+                "constraint_name": "directus_users_role_foreign",
+                "table": "directus_users",
+                "column": "role",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_roles",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "SET NULL"
+            },
+            "meta": {
+                "system": true,
+                "many_collection": "directus_users",
+                "many_field": "role",
+                "one_collection": "directus_roles",
+                "one_field": "users",
+                "one_allowed_collections": null,
+                "one_collection_field": null,
+                "one_deselect_action": "nullify",
+                "junction_field": null,
+                "sort_field": null
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "avatar",
+            "related_collection": "directus_files",
+            "schema": null,
+            "meta": {
+                "system": true,
+                "many_collection": "directus_users",
+                "many_field": "avatar",
+                "one_collection": "directus_files",
+                "one_field": null,
+                "one_allowed_collections": null,
+                "one_collection_field": null,
+                "one_deselect_action": "nullify",
+                "junction_field": null,
+                "sort_field": null
             }
         }
     ]

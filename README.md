@@ -12,7 +12,7 @@ Allows users to start/stop a timer and record the times in a timesheet.
 5. Run the supplied schema to update your database: `npx directus schema apply ./schema/schema.json`
 6. Restart directus
 7. (optional) You can change the collection that the timesheets record time against by visiting the Timesheets > Settings and manualling changing the settings
-8. (optional) If you wish to calculate 9 day fortnights, add a nineDayFortnightStart field to the default Directus users table (type Date) to calculate 9DF - it should be set to the LAST start of the 9DF for this staff member.
+8. (optional) If you wish to calculate 9 day fortnights, set each users nineDayFortnight field. It should be set to the LAST start of the 9DF for this staff member.
 
 Note: If using Docker you may want to add the extension to the volumes via directus -> volumes, add: `- ./node_-_modules/directus-extension-timesheet/dist:/directus/extensions/directus-extension-timesheet`
 
