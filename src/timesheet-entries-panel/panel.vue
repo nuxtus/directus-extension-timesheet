@@ -2,7 +2,7 @@
 	<div class="text" :class="{ 'has-header': showHeader }">
 		<div class="dropdownWrapper">
 			<v-select id="userSelect" v-model="user" :items="usersSelect" placeholder="User" />
-			<v-select id="rangeSelect" v-model="range" :items="ranges" placeholder="Time range" />
+			<DateTime :value="startDate" type="date" @input="setDate"></DateTime>
 		</div>
 		<div class="scroll">
 			<TimesheetTable :items="timeEntries"></TimesheetTable>
@@ -12,30 +12,26 @@
 
 <script setup lang="ts">
 import TimesheetTable from '../components/TimesheetTable.vue'
-import { useApi, useItems, useStores } from '@directus/extensions-sdk'
+import DateTime from '../components/DateTime.vue'
+import { useApi } from '@directus/extensions-sdk'
 import { ref, watch } from 'vue'
+import { isFuture } from 'date-fns'
 
 const api = useApi()
-let users = ref([])
+let users = ref([{
+	id: 'all',
+	first_name: 'All',
+	last_name: 'Users'
+}])
 let usersSelect = ref([])
-let user = ref('')
-let range = ref('currentFortnight')
-let ranges = [{
-	value: 'currentFortnight',
-	text: 'Current fortnight'
-},
-{
-	value: 'lastFortnight',
-	text: 'Last fortnight'
-},
-{
-	value: 'lastMonth',
-	text: 'Last month'
-},
-]
+let user = ref('all')
+let startDate = ref(null)
 
 api.get('/users').then((response) => {
-	users.value = response.data.data
+	users.value = [
+		...users.value,
+		...response.data.data
+	]
 	users.value.forEach(user => {
 		usersSelect.value.push({ value: user.id, text: `${user.first_name} ${user.last_name}` })
 	})
@@ -43,44 +39,36 @@ api.get('/users').then((response) => {
 
 let timeEntries = ref([])
 
+function setDate(dateFromPicker) {
+	startDate.value = dateFromPicker
+}
+
+function fetchTimesheets() {
+	let query = '?fields=*'
+	if (startDate.value) {
+		query += `&filter[start_time][_gte]=${startDate.value}`
+	}
+	if (user.value !== "all") {
+		query += `&filter[user_created][_eq]=${user.value}`
+	}
+	api.get(`/items/timesheets${query}`).then((response) => {
+		timeEntries.value = response.data.data
+	})
+}
+
+watch(startDate, (_newDate, oldDate) => {
+	if (startDate.value) {
+		if (isFuture(new Date(startDate.value))) {
+			alert("Need to provide a date in the past")
+			return
+		}
+		fetchTimesheets()
+	}
+})
+
 watch(user, () => {
 	if (user.value) {
-		let userDetails = usersSelect.value.find(userFromList => userFromList.id === user.value)
-		console.log(userDetails)
-
-		let query = '?fields=*'
-		switch (range.value) {
-			case 'currentFortnight':
-				let currentFortnightStart = new Date()
-				currentFortnightStart.setDate(currentFortnightStart.getDate() - currentFortnightStart.getDay() + 1)
-				query += `&filter[start_time][_gte]=${currentFortnightStart.toISOString()}`
-				console.log(currentFortnightStart)
-				break
-			case 'lastFortnight':
-				let lastFortnightStart = new Date()
-				lastFortnightStart.setDate(lastFortnightStart.getDate() - lastFortnightStart.getDay() - 13)
-				query += `&filter[start_time][_gte]=${lastFortnightStart.toISOString()}`
-				let lastFortnightEnd = new Date(lastFortnightStart)
-				lastFortnightEnd.setDate(lastFortnightEnd.getDate() + 14)
-				query += `&filter[start_time][_lt]=${lastFortnightEnd.toISOString()}`
-				console.log(lastFortnightStart, lastFortnightEnd)
-				break
-			case 'lastMonth':
-				let lastMonthStart = new Date()
-				lastMonthStart.setMonth(lastMonthStart.getMonth() - 1, 1)
-				query += `&filter[start_time][_gte]=${lastMonthStart.toISOString()}`
-				let lastMonthEnd = new Date(lastMonthStart)
-				lastMonthEnd.setMonth(lastMonthEnd.getMonth() + 1, 0)
-				query += `&filter[start_time][_lt]=${lastMonthEnd.toISOString()}`
-				console.log(lastMonthStart, lastMonthEnd)
-				break
-		}
-		if (user.value !== "all") {
-			query += `&filter[user_created][_eq]=${user.value}`
-		}
-		api.get(`/items/timesheets${query}`).then((response) => {
-			timeEntries.value = response.data.data
-		})
+		fetchTimesheets()
 	}
 }, { immediate: true })
 </script>
