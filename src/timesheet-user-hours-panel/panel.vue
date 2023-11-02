@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps } from 'vue'
+import { ref, watch } from 'vue'
 import { differenceInDays, addDays, startOfWeek } from 'date-fns'
 import { useApi } from '@directus/extensions-sdk'
 
