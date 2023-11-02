@@ -1,3 +1,3 @@
 ☐ Change the ts_settings fields to be dropdowns instead of text fields, see https://docs.directus.io/guides/extensions/interfaces-relational-dropdown.html
 ✔ Split timesheet table to its own component @done(23-11-01 15:51)
-☐ TypeError: Cannot read properties of undefined (reading 'countDistinct')
+✔ TypeError: Cannot read properties of undefined (reading 'countDistinct') @done(23-11-02 16:39)
