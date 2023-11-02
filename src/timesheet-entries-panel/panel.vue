@@ -108,10 +108,6 @@ export default defineComponent({
 			type: Boolean,
 			default: false,
 		},
-		// text: {
-		// 	type: String,
-		// 	default: '',
-		// },
 	}
 })
 </script>
@@ -139,8 +135,4 @@ export default defineComponent({
 	height: 100%;
 	margin-top: var(--content-padding);
 }
-
-/* .panel-container {
-	overflow: scroll;
-} */
 </style>

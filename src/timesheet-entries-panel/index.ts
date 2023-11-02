@@ -7,17 +7,7 @@ export default definePanel({
 	icon: "timer",
 	description: "Staff timesheet entries per user and from a specified date.",
 	component: PanelComponent,
-	options: [
-		// {
-		// 	field: "text",
-		// 	name: "Text",
-		// 	type: "string",
-		// 	meta: {
-		// 		interface: "input",
-		// 		width: "full",
-		// 	},
-		// },
-	],
+	options: [],
 	minWidth: 42,
 	minHeight: 18,
 })
