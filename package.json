@@ -26,6 +26,11 @@
 				"type": "panel",
 				"name": "timesheet-9df-summary-panel",
 				"source": "src/timesheet-9df-summary-panel/index.ts"
+			},
+			{
+				"type": "panel",
+				"name": "timesheet-user-hours-panel",
+				"source": "src/timesheet-user-hours-panel/index.ts"
 			}
 		]
 	},
