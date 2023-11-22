@@ -1,0 +1,51 @@
+{
+  "id": "f43a6f22-3f1e-4133-b2b8-ab540c6168f1",
+  "name": "Process new leave",
+  "icon": "airplanemode_active",
+  "color": null,
+  "description": "Modifies leave before saving",
+  "trigger": "event",
+  "options": {
+    "type": "filter",
+    "scope": [
+      "items.create"
+    ],
+    "collections": [
+      "leave"
+    ],
+    "return": "$last"
+  },
+  "operation": "bbecd6fb-b183-42f2-aecc-2ba55a9ce75c",
+  "operations": [
+    {
+      "id": "3f9a4407-3b2c-4a56-81ca-96b35b35691b",
+      "name": "Return with modified leave hours",
+      "key": "return_with_modified_leave_hours",
+      "type": "exec",
+      "position_x": 42,
+      "position_y": 1,
+      "options": {
+        "code": "module.exports = async function(data) {\n    console.log(\"MULTIPLE DAYS\", data)\n\tconst leave = { ...data.$trigger.payload }\n    leave.total_hours = data.$last\n    console.log(\"RESULT\", leave)\n    return leave\n}"
+      },
+      "resolve": null,
+      "reject": null
+    },
+    {
+      "id": "bbecd6fb-b183-42f2-aecc-2ba55a9ce75c",
+      "name": "Calculate leave hours",
+      "key": "calculate_leave_hours",
+      "type": "trigger",
+      "position_x": 21,
+      "position_y": 1,
+      "options": {
+        "flow": "297e8eff-5896-48a8-a13a-d20f3330cd7d",
+        "payload": {
+          "start_date": "{{ $trigger.payload.start_date }}",
+          "end_date": "{{ $trigger.payload.end_date }}"
+        }
+      },
+      "resolve": "3f9a4407-3b2c-4a56-81ca-96b35b35691b",
+      "reject": null
+    }
+  ]
+}
