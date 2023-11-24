@@ -6,6 +6,11 @@ const InvalidLeaveDateError = createError(
 	"The start date must be less than the end date.",
 	400
 )
+const ConflictingLeaveDateError = createError(
+	"CONFLICTING_LEAVE_DATE_ERROR",
+	"The leave date(s) conflict with existing leave.",
+	400
+)
 
 /**
  * Returns the number of work hours in a date range, given a number of hours in a normal work day
@@ -21,7 +26,7 @@ function calculateWorkHours(
 ) {
 	let startDate = new Date(startDateString)
 	let endDate = new Date(endDateString)
-	let numberOfDays = 1 // Start with 1 to include the start date
+	let numberOfDays = 0
 
 	// Loop through each day between start and end dates
 	for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -32,6 +37,13 @@ function calculateWorkHours(
 	}
 	return numberOfDays * leaveHoursPerDay
 }
+
+// Given the existing leave and the new leave, check if the dates overlap
+function checkOverlappingLeave(
+	startDate: string,
+	endDate: string,
+	currentLeave: array
+) {}
 
 export default defineHook(({ filter, action }, { services }) => {
 	filter("items.create", async (input, meta, { schema }) => {
@@ -49,6 +61,33 @@ export default defineHook(({ filter, action }, { services }) => {
 			input["end_date"] = new Date().toISOString().substring(0, 10)
 		}
 
+		// Check start date < end date
+		if (new Date(input.start_date) > new Date(input.end_date)) {
+			throw new InvalidLeaveDateError()
+		}
+
+		// Retrieve all future leave, for use when checking for leave conflicts
+		const currentLeave = await leaveService.readByQuery({
+			filter: {
+				end_date: {
+					_gt: new Date().toISOString().substring(0, 10),
+					user: accountability.user,
+				},
+			},
+		})
+
+		// Check the leave dates don't overlap with existing leave
+		for (const leave of currentLeave) {
+			if (
+				(new Date(startDate) >= new Date(leave.start_date) &&
+					new Date(startDate) <= new Date(leave.end_date)) ||
+				(new Date(endDate) >= new Date(leave.start_date) &&
+					new Date(endDate) <= new Date(leave.end_date))
+			) {
+				throw new ConflictingLeaveDateError()
+			}
+		}
+
 		const settings = await Settings.get(services, schema)
 		const leaveHoursPerDay = settings.leave_hours_per_day
 
@@ -63,36 +102,6 @@ export default defineHook(({ filter, action }, { services }) => {
 		return input
 	})
 
-	// Validation checks before item is updated
-	// TODO: OOPS! Should do total hours calculation in ACTION, and start date check in filter!
-	// action(
-	// 	"items.update",
-	// 	async ({ payload, keys, collection }, { schema, accountability }) => {
-	// 		if (collection !== "leave") {
-	// 			return // Just move on
-	// 		}
-
-	// 		if ("start_date" in payload || "end_date" in payload) {
-	// 			const { ItemsService } = services
-	// 			const leaveService = new ItemsService("leave", {
-	// 				schema: schema,
-	// 				accountability: accountability,
-	// 			})
-	// 			const leavesBeingUpdated = await leaveService.readMany(keys)
-
-	// 			for (const leaveBeingUpdated in leavesBeingUpdated) {
-	// 				const startDate = payload?.start_date || leaveBeingUpdated.start_date // Use the payload date if it exists, otherwise use the existing date
-	// 				const endDate = payload?.end_date || leaveBeingUpdated.end_date
-
-	// 				// Check start date is less than end date (as user could be bulk updating dates and one date may be invalid)
-	// 				if (startDate > endDate) {
-	// 					throw new InvalidLeaveDateError()
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// )
-
 	// If start date or end date is changed, recalculate total hours
 	filter(
 		"items.update",
@@ -101,10 +110,10 @@ export default defineHook(({ filter, action }, { services }) => {
 				return // Just move on
 			}
 
-			const settings = await Settings.get(services, schema)
-			const leaveHoursPerDay = settings.leave_hours_per_day
-
 			if ("start_date" in payload || "end_date" in payload) {
+				const settings = await Settings.get(services, schema)
+				const leaveHoursPerDay = settings.leave_hours_per_day
+
 				const { ItemsService } = services
 				const leaveService = new ItemsService("leave", {
 					schema: schema,
@@ -112,27 +121,37 @@ export default defineHook(({ filter, action }, { services }) => {
 				})
 				const leavesBeingUpdated = await leaveService.readMany(keys)
 
-				// TODO: check if the start date or end date don't overlap with existing bookings
-				// TODO: Retrieve all future bookings (all leave with end_date <= today)
-				// const otherLeave = await leaveService.readMany({
-				// 	end_date: {
-				// 		_gt: new Date().toISOString().substring(0, 10),
-				// 		user: accountability.user,
-				// 	},
-				// })
+				// Retrieve all future leave, for use when checking for leave conflicts
+				const currentLeave = await leaveService.readByQuery({
+					filter: {
+						end_date: {
+							_gt: new Date().toISOString().substring(0, 10),
+							user: accountability.user,
+						},
+					},
+				})
 
 				let leaveCount = 0
 
-				for (const leaveBeingUpdated in leavesBeingUpdated) {
+				for (const leaveBeingUpdated of leavesBeingUpdated) {
 					const startDate = payload?.start_date || leaveBeingUpdated.start_date // Use the payload date if it exists, otherwise use the existing date
 					const endDate = payload?.end_date || leaveBeingUpdated.end_date
 
-					console.log("CHECKING DATES")
-
-					// TODO: Why is this not working?
 					if (new Date(startDate) > new Date(endDate)) {
-						console.log("INVALID DATE", startDate, endDate)
 						throw new InvalidLeaveDateError()
+					}
+
+					// Check the leave dates don't overlap with existing leave
+					for (const leave of currentLeave) {
+						if (
+							leave.id !== leaveBeingUpdated.id &&
+							((new Date(startDate) >= new Date(leave.start_date) &&
+								new Date(startDate) <= new Date(leave.end_date)) ||
+								(new Date(endDate) >= new Date(leave.start_date) &&
+									new Date(endDate) <= new Date(leave.end_date)))
+						) {
+							throw new ConflictingLeaveDateError()
+						}
 					}
 
 					const workHours = calculateWorkHours(
