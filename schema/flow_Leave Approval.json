@@ -1,7 +1,7 @@
 {
   "id": "1d3334c0-c448-4f18-9e0e-9f2deb63330c",
   "name": "Approve leave",
-  "icon": "playlist_add_check",
+  "icon": "order_approve",
   "color": null,
   "description": "Approve leave that has been applied for.",
   "trigger": "manual",
@@ -10,54 +10,19 @@
       "leave"
     ],
     "requireConfirmation": true,
-    "confirmationDescription": "This will approve the leave and inform the staff member, are you sure?"
+    "confirmationDescription": "This will approve the leave, are you sure?"
   },
-  "operation": "19d80181-a814-438a-a8ec-501c7564a4ed",
+  "operation": "c91fe83b-09c0-4cee-9c29-db7d9b4240ac",
   "operations": [
     {
-      "id": "19d80181-a814-438a-a8ec-501c7564a4ed",
-      "name": "get timestamp",
-      "key": "get_timestamp",
-      "type": "exec",
-      "position_x": 18,
+      "id": "c91fe83b-09c0-4cee-9c29-db7d9b4240ac",
+      "name": "Approve leave",
+      "key": "ts_approve_leave_dn91r",
+      "type": "ts_approve_leave",
+      "position_x": 22,
       "position_y": 1,
-      "options": {
-        "code": "module.exports = async function(data) {\n\treturn new Date().toISOString().slice(0, 19).replace('T', ' ');\n}"
-      },
-      "resolve": "73040dc7-3ad2-4b6e-b444-4cb384200052",
-      "reject": null
-    },
-    {
-      "id": "528e6f32-220e-43da-bf6a-dfb7c96c8838",
-      "name": "Send email confirmation",
-      "key": "send_email_confirmation",
-      "type": "mail",
-      "position_x": 54,
-      "position_y": 1,
-      "options": {
-        "subject": "Your leave has been approved",
-        "to": "{{ $trigger.payload.user.email }}",
-        "body": "Your leave has been approved."
-      },
+      "options": {},
       "resolve": null,
-      "reject": null
-    },
-    {
-      "id": "73040dc7-3ad2-4b6e-b444-4cb384200052",
-      "name": "Set approval details",
-      "key": "set_approval_details",
-      "type": "item-update",
-      "position_x": 35,
-      "position_y": 1,
-      "options": {
-        "collection": "leave",
-        "key": "{{$trigger.body.keys}}",
-        "payload": {
-          "approved_by": "{{ $accountability.user }}",
-          "approved": "{{ $last }}"
-        }
-      },
-      "resolve": "528e6f32-220e-43da-bf6a-dfb7c96c8838",
       "reject": null
     }
   ]

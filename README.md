@@ -13,6 +13,7 @@ Allows users to start/stop a timer and record the times in a timesheet.
 6. Restart directus
 7. (optional) You can change the collection that the timesheets record time against by visiting the Timesheets > Settings and manualling changing the settings
 8. (optional) If you wish to calculate 9 day fortnights, set each users nineDayFortnight field. It should be set to the LAST start of the 9DF for this staff member.
+9. (optional) Create a "manual trigger" flow on the leave collection. Add the "Approve Leave" operation to the flow. This will allow users to approve leave.
 
 Note: If using Docker you may want to add the extension to the volumes via directus -> volumes, add: `- ./node_-_modules/directus-extension-timesheet/dist:/directus/extensions/directus-extension-timesheet`
 
@@ -23,37 +24,6 @@ The collection that that timers are run against is configurable in the Timesheet
 1. id (integer)
 2. name\description (string) - This can be called anything you want but must be a string
 3. status - A standard Directus status field, only the "active" status is displayed in the timer dropdown
-
-## Validation
-
-Timesheet entry validation is left to you. I suggest adding a flow and creating a script to validate. Here is a starting point:
-
-```ts
-module.exports = async function(data) {
-	let new_start_time = data.$last.start_time;
-    let new_end_time = data.$last.end_time;
-    
-    if ('start_time' in data.$trigger.payload) {
-     	new_start_time = data.$trigger.payload.end_time
-    }
-    if ('end_time' in data.$trigger.payload) {
-     	new_end_time = data.$trigger.payload.end_time
-    }
-    if (new_end_time === null) {
-     	return; // Nothing to validate   
-    }
-    new_end_time = new Date(new_end_time)
-    if (new_end_time > new Date()) {
-     	throw Error("End time must be in the past.")   
-    }
-    new_start_time = new Date(new_start_time)
-    if (new_start_time > new_end_time) {
-        throw Error("Start time must be before end time.")
-    }
-    
-	return data.$trigger.payload;
-}
-```
 
 ## Permissions
 
