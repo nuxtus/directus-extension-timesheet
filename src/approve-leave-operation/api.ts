@@ -40,7 +40,6 @@ export default defineOperationApi<Options>({
 		let leaveIds = []
 		let collection = undefined
 
-		// TODO: Check user has permission to approve leave
 		if (
 			accountability === null ||
 			accountability.user === null ||
@@ -48,8 +47,6 @@ export default defineOperationApi<Options>({
 		) {
 			throw new PermissionDeniedError()
 		}
-
-		console.log("accountability", accountability)
 
 		try {
 			const trigger = data.$trigger as LeaveDataTrigger
