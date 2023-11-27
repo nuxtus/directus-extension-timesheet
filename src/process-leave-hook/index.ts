@@ -11,6 +11,22 @@ const ConflictingLeaveDateError = createError(
 	"The leave date(s) conflict with existing leave.",
 	400
 )
+const LeaveInPastError = createError(
+	"LEAVE_IN_PAST_ERROR",
+	"Cannot delete leave that occurs in the past.",
+	400
+)
+const PermissionDeniedError = createError(
+	"PERMISSION_DENIED_ERROR",
+	"You do not have permission to create leave.",
+	403
+)
+
+type Input = {
+	start_date: string
+	end_date: string
+	total_hours: number
+}
 
 /**
  * Returns the number of work hours in a date range, given a number of hours in a normal work day
@@ -38,33 +54,36 @@ function calculateWorkHours(
 	return numberOfDays * leaveHoursPerDay
 }
 
-// Given the existing leave and the new leave, check if the dates overlap
-function checkOverlappingLeave(
-	startDate: string,
-	endDate: string,
-	currentLeave: array
-) {}
-
 export default defineHook(({ filter, action }, { services }) => {
-	filter("items.create", async (input, meta, { schema }) => {
+	filter("items.create", async (input, meta, { schema, accountability }) => {
 		if (meta.collection !== "leave") {
 			return // Just move on
 		}
 
-		// TODO: Check no existing dates overlap
+		const typedInput = input as Input // Explicitly define the type of input
 
 		// if dates are the default in Directus they are not passed in the input, add them here
-		if (!("start_date" in input)) {
-			input["start_date"] = new Date().toISOString().substring(0, 10)
+		if (!("start_date" in typedInput)) {
+			typedInput["start_date"] = new Date().toISOString().substring(0, 10)
 		}
-		if (!("end_date" in input)) {
-			input["end_date"] = new Date().toISOString().substring(0, 10)
+		if (!("end_date" in typedInput)) {
+			typedInput["end_date"] = new Date().toISOString().substring(0, 10)
 		}
 
 		// Check start date < end date
-		if (new Date(input.start_date) > new Date(input.end_date)) {
+		if (new Date(typedInput.start_date) > new Date(typedInput.end_date)) {
 			throw new InvalidLeaveDateError()
 		}
+
+		if (accountability === null || accountability.user === null) {
+			throw new PermissionDeniedError()
+		}
+
+		const { ItemsService } = services
+		const leaveService = new ItemsService("leave", {
+			schema: schema,
+			accountability: accountability,
+		})
 
 		// Retrieve all future leave, for use when checking for leave conflicts
 		const currentLeave = await leaveService.readByQuery({
@@ -75,6 +94,9 @@ export default defineHook(({ filter, action }, { services }) => {
 				},
 			},
 		})
+
+		const startDate = typedInput.start_date
+		const endDate = typedInput.end_date
 
 		// Check the leave dates don't overlap with existing leave
 		for (const leave of currentLeave) {
@@ -93,13 +115,13 @@ export default defineHook(({ filter, action }, { services }) => {
 
 		const workHours = calculateWorkHours(
 			leaveHoursPerDay,
-			input.start_date,
-			input.end_date
+			typedInput.start_date,
+			typedInput.end_date
 		)
 
-		input["total_hours"] = workHours
+		typedInput["total_hours"] = workHours
 
-		return input
+		return typedInput
 	})
 
 	// If start date or end date is changed, recalculate total hours
@@ -120,6 +142,10 @@ export default defineHook(({ filter, action }, { services }) => {
 					accountability: accountability,
 				})
 				const leavesBeingUpdated = await leaveService.readMany(keys)
+
+				if (accountability === null || accountability.user === null) {
+					throw new PermissionDeniedError()
+				}
 
 				// Retrieve all future leave, for use when checking for leave conflicts
 				const currentLeave = await leaveService.readByQuery({
@@ -168,6 +194,28 @@ export default defineHook(({ filter, action }, { services }) => {
 						}
 					)
 					leaveCount++
+				}
+			}
+		}
+	)
+
+	filter(
+		"items.delete",
+		async (payload, { collection }, { schema, accountability }) => {
+			if (collection !== "leave") {
+				return // Just move on
+			}
+
+			const { ItemsService } = services
+			const leaveService = new ItemsService("leave", {
+				schema: schema,
+				accountability: accountability,
+			})
+			const leavesBeingDeleted = await leaveService.readMany(payload)
+
+			for (const leaveBeingDeleted of leavesBeingDeleted) {
+				if (new Date(leaveBeingDeleted.end_date) < new Date()) {
+					throw new LeaveInPastError()
 				}
 			}
 		}

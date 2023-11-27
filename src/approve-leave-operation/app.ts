@@ -5,21 +5,6 @@ export default defineOperationApp({
 	name: "Approve leave",
 	icon: "order_approve",
 	description: "Approve leave requests.",
-	overview: ({ text }) => [
-		{
-			label: "Text",
-			text: text,
-		},
-	],
-	options: [
-		{
-			field: "text",
-			name: "Text",
-			type: "string",
-			meta: {
-				width: "full",
-				interface: "input",
-			},
-		},
-	],
+	overview: () => [],
+	options: [],
 })

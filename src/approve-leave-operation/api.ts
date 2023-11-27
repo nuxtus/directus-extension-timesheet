@@ -31,7 +31,7 @@ const LeaveCollectionError = createError(
 const PermissionDeniedError = createError(
 	"LEAVE_PERMISSION_DENIED_ERROR",
 	"You do not have permission to approve leave.",
-	400
+	403
 )
 
 export default defineOperationApi<Options>({
