@@ -88,10 +88,16 @@ export default defineHook(({ filter, action }, { services }) => {
 		// Retrieve all future leave, for use when checking for leave conflicts
 		const currentLeave = await leaveService.readByQuery({
 			filter: {
-				end_date: {
-					_gt: new Date().toISOString().substring(0, 10),
-					user: accountability.user,
-				},
+				_and: [
+					{
+						end_date: {
+							_gt: new Date().toISOString().substring(0, 10),
+						},
+					},
+					{
+						user: accountability.user,
+					},
+				],
 			},
 		})
 
@@ -150,10 +156,16 @@ export default defineHook(({ filter, action }, { services }) => {
 				// Retrieve all future leave, for use when checking for leave conflicts
 				const currentLeave = await leaveService.readByQuery({
 					filter: {
-						end_date: {
-							_gt: new Date().toISOString().substring(0, 10),
-							user: accountability.user,
-						},
+						_and: [
+							{
+								end_date: {
+									_gt: new Date().toISOString().substring(0, 10),
+								},
+							},
+							{
+								user: accountability.user,
+							},
+						],
 					},
 				})
 
