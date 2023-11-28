@@ -61,6 +61,7 @@ export default defineOperationApi<Options>({
 
 		const leaveService = new services.ItemsService("leave", {
 			schema: await getSchema(),
+			accountability: accountability,
 		})
 		const leaveToApprove = await leaveService.readMany(leaveIds)
 
