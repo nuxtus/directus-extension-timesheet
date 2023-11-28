@@ -1,11 +1,12 @@
 ✔ Split timesheet table to its own component @done(23-11-01 15:51)
 ✔ TypeError: Cannot read properties of undefined (reading 'countDistinct') @done(23-11-02 16:39)
-☐ Only admin should have the ability to add\update "approved by" field for leave
+✔ Only admin should have the ability to add\update "approved by" field for leave @done(23-11-28 12:09)
 ✔ Remove leave approval flow and replace with Directus "operation" to do this. Flow should only be to trigger via button. @done(23-11-27 14:49)
 ✔ Can only delete leave in the future @done(23-11-27 15:18)
 ☐ User's 9DF start date is already recorded, use this to add future 9DFs each week to the calendar
 ☐ See "Permissions" in README.md, these could be hard-coded in the extension
-☐ Confirm user without update permissions on leave approval fields can't run the leave approval operation
+☐ Confirm user without update permissions on leave approval fields can't run the leave approval operation - THIS ISN'T WORKING
+☐ Admin user needs to be able to remove/update leave approval fields (other users cannot)
 ☐ If leave is updated and already approved, need to remove approval!
 
 Later:
