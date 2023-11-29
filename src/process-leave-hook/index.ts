@@ -138,7 +138,11 @@ export default defineHook(({ filter, action }, { services }) => {
 				return // Just move on
 			}
 
-			if ("start_date" in payload || "end_date" in payload) {
+			if (
+				"start_date" in payload ||
+				"end_date" in payload ||
+				"leave_type" in payload
+			) {
 				const settings = await Settings.get(services, schema)
 				const leaveHoursPerDay = settings.leave_hours_per_day
 
@@ -153,22 +157,6 @@ export default defineHook(({ filter, action }, { services }) => {
 					throw new PermissionDeniedError()
 				}
 
-				// Retrieve all future leave, for use when checking for leave conflicts
-				const currentLeave = await leaveService.readByQuery({
-					filter: {
-						_and: [
-							{
-								end_date: {
-									_gt: new Date().toISOString().substring(0, 10),
-								},
-							},
-							{
-								user: accountability.user,
-							},
-						],
-					},
-				})
-
 				let leaveCount = 0
 
 				for (const leaveBeingUpdated of leavesBeingUpdated) {
@@ -178,6 +166,23 @@ export default defineHook(({ filter, action }, { services }) => {
 					if (new Date(startDate) > new Date(endDate)) {
 						throw new InvalidLeaveDateError()
 					}
+
+					// Need to check current leave for each leave being updated as it may be different if admin is bulk updating
+					// Retrieve all future leave, for use when checking for leave conflicts
+					const currentLeave = await leaveService.readByQuery({
+						filter: {
+							_and: [
+								{
+									end_date: {
+										_gt: new Date().toISOString().substring(0, 10),
+									},
+								},
+								{
+									user: leaveBeingUpdated.user,
+								},
+							],
+						},
+					})
 
 					// Check the leave dates don't overlap with existing leave
 					for (const leave of currentLeave) {
@@ -200,7 +205,12 @@ export default defineHook(({ filter, action }, { services }) => {
 
 					await leaveService.updateOne(
 						keys[leaveCount],
-						{ total_hours: workHours },
+						{
+							total_hours: workHours,
+							// Reset approval due to time change
+							approved: null,
+							approved_by: null,
+						},
 						{
 							emitEvents: false, // Don't emit events to avoid infinite loop
 						}

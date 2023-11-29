@@ -50,6 +50,3 @@ export function calculateTimeSpent(data: any[], start: Date) {
 
 	return blockTotals
 }
-
-// Usage
-// const totalTimeSpent = calculateTimeSpent(response.data.data, new Date(userDetails.nineDayFortnightStart));

@@ -48,16 +48,16 @@ let isUnderTime = ref(false)
 switch (props.timeframe) {
 	case 'last9df':
 		let nineDayFortnight: String | null = null
-		api.get(`/users?fields=nineDayFortnight,first_name,last_name&filter[id][_eq]=${props.user.key}&limit=1`).then((response) => {
+		api.get(`/users?fields=nineDayFortnightStart,first_name,last_name&filter[id][_eq]=${props.user.key}&limit=1`).then((response) => {
 			if (response.data.data.length === 0) {
 				console.error("Invalid user provided")
 				return
 			}
 			const user = response.data.data[0]
 			userName.value = `${user.first_name} ${user.last_name}`
-			nineDayFortnight = user.nineDayFortnight
+			nineDayFortnight = user.nineDayFortnightStart
 			if (nineDayFortnight === null) {
-				console.error("User does not have a nineDayFortnight set")
+				console.error("User does not have a nineDayFortnightStart set")
 				return
 			}
 			let today = new Date()
