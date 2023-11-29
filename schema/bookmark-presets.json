@@ -1,0 +1,60 @@
+[
+	{
+		"filter": null,
+		"layout_query": null,
+		"layout_options": null,
+		"role": null,
+		"user": null,
+		"id": 11,
+		"bookmark": null,
+		"icon": "more_time",
+		"color": null,
+		"search": null,
+		"collection": "timesheets",
+		"layout": "nuxtus-timesheet-layout",
+		"refresh_interval": null
+	},
+	{
+		"filter": {
+			"_and": [
+				{
+					"end_date": {
+						"_gte": "$NOW"
+					}
+				},
+				{
+					"approved_by": {
+						"_nnull": true
+					}
+				}
+			]
+		},
+		"layout_query": {
+			"tabular": {
+				"page": 1
+			}
+		},
+		"layout_options": {
+			"calendar": {
+				"viewInfo": {
+					"type": "dayGridMonth",
+					"startDateStr": "2023-11-01T00:00:00+08:00"
+				},
+				"template": "{{user.first_name}} {{user.last_name}} ({{leave_type.name}})",
+				"startDateField": "start_date",
+				"endDateField": "end_date",
+				"firstDay": 1
+			}
+		},
+		"role": null,
+		"user": null,
+		"id": 17,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "leave",
+		"layout": "calendar",
+		"refresh_interval": null
+	}
+]
