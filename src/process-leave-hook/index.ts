@@ -21,6 +21,11 @@ const PermissionDeniedError = createError(
 	"You do not have permission to create leave.",
 	403
 )
+const EmailError = createError(
+	"EMAIL_ERROR",
+	"Failed to send email, check email settings.",
+	400
+)
 
 type Input = {
 	start_date: string
@@ -52,6 +57,45 @@ function calculateWorkHours(
 		}
 	}
 	return numberOfDays * leaveHoursPerDay
+}
+
+async function notifyManagerByEmail(services, schema, payload, accountability) {
+	// Try getting the manager email from user details
+	const { ItemsService } = services
+	const userService = new ItemsService("directus_users", {
+		schema: schema,
+		accountability: accountability,
+	})
+	const userDetails = await userService.readOne(accountability!.user)
+
+	let managerEmail = undefined
+	if (userDetails.manager) {
+		const managerDetails = await userService.readOne(userDetails.manager)
+		managerEmail = managerDetails.email
+	} else {
+		// If that fails use the manager email from settings
+		const settings = await Settings.get(services, schema)
+		managerEmail = settings.default_timesheet_email
+	}
+
+	const { MailService } = services
+	const mailService = new MailService({ schema })
+
+	mailService
+		.send({
+			to: managerEmail,
+			from: userDetails.email,
+			subject: `A leave request requires approval`,
+			text: `${userDetails.first_name} ${
+				userDetails.last_name
+			} has submitted a leave request that requires approval. Please login to approve or reject the request.\r\n\r\n${JSON.stringify(
+				payload
+			)}`,
+		})
+		.catch((err: any) => {
+			console.error(err)
+			throw new EmailError()
+		})
 }
 
 export default defineHook(({ filter, action }, { services }) => {
@@ -130,6 +174,23 @@ export default defineHook(({ filter, action }, { services }) => {
 		return typedInput
 	})
 
+	action(
+		"items.create",
+		async ({ key, payload, collection }, { accountability, schema }) => {
+			if (collection !== "leave") {
+				return // Just move on
+			}
+			if (accountability === null || accountability.user === null) {
+				throw new PermissionDeniedError()
+			}
+			if (accountability.admin) {
+				return // No need to notify as person creating leave is an admin
+			}
+
+			await notifyManagerByEmail(services, schema, payload, accountability)
+		}
+	)
+
 	// If start date or end date is changed, recalculate total hours
 	filter(
 		"items.update",
@@ -149,7 +210,7 @@ export default defineHook(({ filter, action }, { services }) => {
 				const { ItemsService } = services
 				const leaveService = new ItemsService("leave", {
 					schema: schema,
-					accountability: accountability,
+					// Deliberately no accountability here as need admin ability to reset approval
 				})
 				const leavesBeingUpdated = await leaveService.readMany(keys)
 
@@ -203,18 +264,26 @@ export default defineHook(({ filter, action }, { services }) => {
 						endDate
 					)
 
-					await leaveService.updateOne(
-						keys[leaveCount],
-						{
-							total_hours: workHours,
-							// Reset approval due to time change
-							approved: null,
-							approved_by: null,
-						},
-						{
-							emitEvents: false, // Don't emit events to avoid infinite loop
-						}
-					)
+					const newLeave = {
+						total_hours: workHours,
+					}
+
+					// Check if the user updating the leave is an admin
+					if (!accountability.admin) {
+						// Reset approval due to time or type change
+						newLeave.approved = null
+						newLeave.approved_by = null
+						await notifyManagerByEmail(
+							services,
+							schema,
+							payload,
+							accountability
+						)
+					}
+
+					await leaveService.updateOne(keys[leaveCount], newLeave, {
+						emitEvents: false, // Don't emit events to avoid infinite loop
+					})
 					leaveCount++
 				}
 			}
