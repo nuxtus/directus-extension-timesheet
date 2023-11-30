@@ -31,3 +31,7 @@ It's up to you to manually define the permissions for CRUD operations within Dir
 
 1. Lock users to only being able to CRU the start_time, end_time and project fields.
 2. Add permission to only allow users to view their own timesheets
+3. Give users permission to view everyone's leave, but not edit/delete it.
+4. Do not allow add/edit of the leave approval fields.
+
+Some example roles with these permissions are provided in the schema folder.

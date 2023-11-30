@@ -48,6 +48,11 @@
 					"app": "src/approve-leave-operation/app.ts",
 					"api": "src/approve-leave-operation/api.ts"
 				}
+			},
+			{
+				"type": "hook",
+				"name": "9df-calculation-hook",
+				"source": "src/9df-calculation-hook/index.ts"
 			}
 		]
 	},
@@ -68,7 +73,7 @@
 	},
 	"devDependencies": {
 		"@directus/extensions-sdk": "10.1.13",
-		"@types/node": "^20.10.0",
+		"@types/node": "^20.10.1",
 		"typescript": "^5.3.2",
 		"vue": "^3.3.9"
 	}

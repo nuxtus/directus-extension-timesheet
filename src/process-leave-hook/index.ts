@@ -59,7 +59,13 @@ function calculateWorkHours(
 	return numberOfDays * leaveHoursPerDay
 }
 
-async function notifyManagerByEmail(services, schema, payload, accountability) {
+async function notifyManagerByEmail(
+	services,
+	schema,
+	payload,
+	accountability,
+	env
+) {
 	// Try getting the manager email from user details
 	const { ItemsService } = services
 	const userService = new ItemsService("directus_users", {
@@ -84,7 +90,7 @@ async function notifyManagerByEmail(services, schema, payload, accountability) {
 	mailService
 		.send({
 			to: managerEmail,
-			from: userDetails.email,
+			from: userDetails.email, // or use env.EMAIL_FROM
 			subject: `A leave request requires approval`,
 			text: `${userDetails.first_name} ${
 				userDetails.last_name
@@ -98,7 +104,7 @@ async function notifyManagerByEmail(services, schema, payload, accountability) {
 		})
 }
 
-export default defineHook(({ filter, action }, { services }) => {
+export default defineHook(({ filter, action }, { services, env }) => {
 	filter("items.create", async (input, meta, { schema, accountability }) => {
 		if (meta.collection !== "leave") {
 			return // Just move on
@@ -121,6 +127,10 @@ export default defineHook(({ filter, action }, { services }) => {
 
 		if (accountability === null || accountability.user === null) {
 			throw new PermissionDeniedError()
+		}
+
+		if (!("user" in typedInput)) {
+			typedInput["user"] = accountability.user
 		}
 
 		const { ItemsService } = services
@@ -277,7 +287,8 @@ export default defineHook(({ filter, action }, { services }) => {
 							services,
 							schema,
 							payload,
-							accountability
+							accountability,
+							env
 						)
 					}
 
