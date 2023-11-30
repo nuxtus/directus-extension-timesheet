@@ -2,8 +2,7 @@
 import { Settings } from "../process-leave-hook/ts-settings"
 
 export default ({ schedule }, { services, getSchema }) => {
-	// schedule("*/15 * * * *", async () => {
-	schedule("* * * * *", async () => {
+	schedule("0 0 * * 0", async () => {
 		const schema = await getSchema()
 		const { ItemsService } = services
 		const userService = new ItemsService("directus_users", {
