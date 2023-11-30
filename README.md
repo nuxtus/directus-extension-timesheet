@@ -12,9 +12,11 @@ Allows users to start/stop a timer and record the times in a timesheet.
 5. Run the supplied schema to update your database: `npx directus schema apply ./schema/schema.json`
 6. Restart directus
 7. Create your leave types (eg. Annual leave, Sick/Carer's leave, 9 day fortnight, Work from Home etc) in the `leave type` collection. Note: Where users still accrue leave should be marked as "claimable"
-8. (optional) You can change the collection that the timesheets record time against by visiting the Timesheets > Settings and manualling changing the settings
-9. (optional) If you wish to calculate 9 day fortnights, set each users manager and nineDayFortnightStart field. It should be set to the LAST monday (start of the 9DF week) for this staff member.
-10. (optional) Create a "manual trigger" flow on the leave collection. Add the "Approve Leave" operation to the flow. This will allow users to approve leave.
+8. Go to Timesheets > Settings and save your default settings
+9. Set permissions for timesheets and all ts_ collections for each role type
+10. (optional) You can change the collection that the timesheets record time against by visiting the Timesheets > Settings and manually changing the settings
+11. (optional) If you wish to calculate 9 day fortnights, set each users manager and nineDayFortnightStart field. It should be set to the LAST monday (start of the 9DF week) for this staff member.
+12. (recommended) Create a "manual trigger" flow on the leave collection. Add the "Approve Leave" operation to the flow. This will allow users to approve leave.
 
 Note: If using Docker you may want to add the extension to the volumes via directus -> volumes, add: `- ./node_-_modules/directus-extension-timesheet/dist:/directus/extensions/directus-extension-timesheet`
 

@@ -10,7 +10,6 @@
 ✔ If leave is updated and already approved, need to remove approval! - Send email for re-approval as per flow. @done(23-11-29 17:16)
 ✔ Rename leave collection to ts_leave @done(23-11-30 14:11)
 ☐ Add leave to timesheet calculations
-☐ Add default leave, and other default items to a setup/config hook
 
 Later:
 
@@ -22,3 +21,4 @@ Later:
 	✔ Use EMAIL_FROM in .env to send emails in process-leave-hook/index.ts @done(23-11-30 10:37)
 	☐ Add an email template to timesheet emails: https://stackoverflow.com/questions/68984920/webhooks-directus-9-send-an-email-when-user-create-a-record-in-a-table
 	☐ Add public holidays to leave/timesheets
+	☐ Add default leave, ts_settings, bookmarks and other default items to a setup/config hook
