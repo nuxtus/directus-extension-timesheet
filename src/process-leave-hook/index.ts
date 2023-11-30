@@ -106,7 +106,7 @@ async function notifyManagerByEmail(
 
 export default defineHook(({ filter, action }, { services, env }) => {
 	filter("items.create", async (input, meta, { schema, accountability }) => {
-		if (meta.collection !== "leave") {
+		if (meta.collection !== "ts_leave") {
 			return // Just move on
 		}
 
@@ -134,7 +134,7 @@ export default defineHook(({ filter, action }, { services, env }) => {
 		}
 
 		const { ItemsService } = services
-		const leaveService = new ItemsService("leave", {
+		const leaveService = new ItemsService("ts_leave", {
 			schema: schema,
 			accountability: accountability,
 		})
@@ -187,7 +187,7 @@ export default defineHook(({ filter, action }, { services, env }) => {
 	action(
 		"items.create",
 		async ({ key, payload, collection }, { accountability, schema }) => {
-			if (collection !== "leave") {
+			if (collection !== "ts_leave") {
 				return // Just move on
 			}
 			if (accountability === null || accountability.user === null) {
@@ -205,7 +205,7 @@ export default defineHook(({ filter, action }, { services, env }) => {
 	filter(
 		"items.update",
 		async (payload, { collection, keys }, { schema, accountability }) => {
-			if (collection !== "leave") {
+			if (collection !== "ts_leave") {
 				return // Just move on
 			}
 
@@ -218,7 +218,7 @@ export default defineHook(({ filter, action }, { services, env }) => {
 				const leaveHoursPerDay = settings.leave_hours_per_day
 
 				const { ItemsService } = services
-				const leaveService = new ItemsService("leave", {
+				const leaveService = new ItemsService("ts_leave", {
 					schema: schema,
 					// Deliberately no accountability here as need admin ability to reset approval
 				})
@@ -304,12 +304,12 @@ export default defineHook(({ filter, action }, { services, env }) => {
 	filter(
 		"items.delete",
 		async (payload, { collection }, { schema, accountability }) => {
-			if (collection !== "leave") {
+			if (collection !== "ts_leave") {
 				return // Just move on
 			}
 
 			const { ItemsService } = services
-			const leaveService = new ItemsService("leave", {
+			const leaveService = new ItemsService("ts_leave", {
 				schema: schema,
 				accountability: accountability,
 			})

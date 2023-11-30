@@ -8,7 +8,9 @@
 ✔ Confirm user without update permissions on leave approval fields can't run the leave approval operation @done(23-11-28 13:49)
 ✔ Admin user needs to be able to remove/update leave approval fields (other users cannot) @done(23-11-28 13:49)
 ✔ If leave is updated and already approved, need to remove approval! - Send email for re-approval as per flow. @done(23-11-29 17:16)
-☐ Rename leave collection to ts_leave
+✔ Rename leave collection to ts_leave @done(23-11-30 14:11)
+☐ Add leave to timesheet calculations
+☐ Add default leave, and other default items to a setup/config hook
 
 Later:
 
