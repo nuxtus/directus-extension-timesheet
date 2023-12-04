@@ -1,6 +1,51 @@
 {
     "collections": [
         {
+            "collection": "ts_leave",
+            "meta": {
+                "collection": "ts_leave",
+                "icon": "airplanemode_active",
+                "note": null,
+                "display_template": null,
+                "hidden": false,
+                "singleton": false,
+                "translations": [
+                    {
+                        "language": "en-US",
+                        "translation": "Leave",
+                        "singular": "Leave",
+                        "plural": "Leave"
+                    },
+                    {
+                        "language": "en-GB",
+                        "translation": "Leave",
+                        "singular": "Leave",
+                        "plural": "Leave"
+                    },
+                    {
+                        "language": "en-CA",
+                        "translation": "Leave",
+                        "singular": "Leave",
+                        "plural": "Leave"
+                    }
+                ],
+                "archive_field": null,
+                "archive_app_filter": true,
+                "archive_value": "archived",
+                "unarchive_value": "draft",
+                "sort_field": null,
+                "accountability": "all",
+                "color": null,
+                "item_duplication_fields": null,
+                "sort": 1,
+                "group": "timesheets",
+                "collapse": "open",
+                "preview_url": null,
+                "versioning": false
+            },
+            "schema": {}
+        },
+        {
             "collection": "ts_tasks",
             "meta": {
                 "collection": "ts_tasks",
@@ -37,7 +82,52 @@
                 "accountability": "all",
                 "color": "#6644FF",
                 "item_duplication_fields": null,
-                "sort": 1,
+                "sort": 2,
+                "group": "timesheets",
+                "collapse": "open",
+                "preview_url": null,
+                "versioning": false
+            },
+            "schema": {}
+        },
+        {
+            "collection": "ts_leave_type",
+            "meta": {
+                "collection": "ts_leave_type",
+                "icon": "list_alt",
+                "note": null,
+                "display_template": "{{name}}",
+                "hidden": false,
+                "singleton": false,
+                "translations": [
+                    {
+                        "language": "en-US",
+                        "translation": "Leave types",
+                        "singular": "Leave type",
+                        "plural": "Leave types"
+                    },
+                    {
+                        "language": "en-GB",
+                        "translation": "Leave types",
+                        "singular": "Leave type",
+                        "plural": "Leave types"
+                    },
+                    {
+                        "language": "en-CA",
+                        "translation": "Leave types",
+                        "singular": "Leave type",
+                        "plural": "Leave types"
+                    }
+                ],
+                "archive_field": "status",
+                "archive_app_filter": true,
+                "archive_value": "archived",
+                "unarchive_value": "draft",
+                "sort_field": null,
+                "accountability": "all",
+                "color": null,
+                "item_duplication_fields": null,
+                "sort": 3,
                 "group": "timesheets",
                 "collapse": "open",
                 "preview_url": null,
@@ -82,7 +172,7 @@
                 "accountability": "all",
                 "color": "#6644FF",
                 "item_duplication_fields": null,
-                "sort": 2,
+                "sort": 4,
                 "group": "timesheets",
                 "collapse": "open",
                 "preview_url": null,
@@ -108,7 +198,7 @@
                 "accountability": "all",
                 "color": "#6644FF",
                 "item_duplication_fields": null,
-                "sort": 15,
+                "sort": 6,
                 "group": null,
                 "collapse": "open",
                 "preview_url": null,
@@ -566,6 +656,482 @@
             }
         },
         {
+            "collection": "ts_leave",
+            "field": "id",
+            "type": "integer",
+            "schema": {
+                "name": "id",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "integer",
+                "is_nullable": false,
+                "generation_expression": null,
+                "default_value": "nextval('ts_leave_id_seq'::regclass)",
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 32,
+                "numeric_scale": 0,
+                "is_unique": true,
+                "is_primary_key": true,
+                "has_auto_increment": true,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "id",
+                "special": null,
+                "interface": "input",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": true,
+                "hidden": true,
+                "sort": 1,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "user",
+            "type": "uuid",
+            "schema": {
+                "name": "user",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "uuid",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id"
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "user",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": {
+                    "template": "{{email}}",
+                    "enableCreate": false,
+                    "filter": {
+                        "_and": [
+                            {
+                                "status": {
+                                    "_eq": "active"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": true,
+                "hidden": true,
+                "sort": 2,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "start_date",
+            "type": "date",
+            "schema": {
+                "name": "start_date",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "date",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "start_date",
+                "special": null,
+                "interface": "datetime",
+                "options": null,
+                "display": "datetime",
+                "display_options": {
+                    "format": "short"
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 3,
+                "width": "half",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "end_date",
+            "type": "date",
+            "schema": {
+                "name": "end_date",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "date",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "end_date",
+                "special": null,
+                "interface": "datetime",
+                "options": null,
+                "display": "datetime",
+                "display_options": {
+                    "format": "short"
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 4,
+                "width": "half",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "leave_type",
+            "type": "integer",
+            "schema": {
+                "name": "leave_type",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "integer",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 32,
+                "numeric_scale": 0,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": "public",
+                "foreign_key_table": "ts_leave_type",
+                "foreign_key_column": "id"
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "leave_type",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": {
+                    "template": "{{name}}",
+                    "filter": {
+                        "_and": [
+                            {
+                                "status": {
+                                    "_eq": "published"
+                                }
+                            }
+                        ]
+                    },
+                    "enableCreate": false
+                },
+                "display": "related-values",
+                "display_options": {
+                    "template": "{{name}}"
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 5,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "total_hours",
+            "type": "decimal",
+            "schema": {
+                "name": "total_hours",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "numeric",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 10,
+                "numeric_scale": 2,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "total_hours",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "min": 0.5,
+                    "iconLeft": "av_timer"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 6,
+                "width": "full",
+                "translations": null,
+                "note": "If not taking a full day of leave, enter number of hours here.",
+                "conditions": [
+                    {
+                        "name": "Hide if multiple days",
+                        "rule": {
+                            "_and": [
+                                {
+                                    "start_date": {
+                                        "_neq": "end_date"
+                                    }
+                                }
+                            ]
+                        },
+                        "readonly": true,
+                        "hidden": true,
+                        "required": false,
+                        "options": {
+                            "font": "sans-serif",
+                            "trim": false,
+                            "masked": false,
+                            "clear": false,
+                            "slug": false,
+                            "max": 7.6,
+                            "min": 0.5
+                        }
+                    }
+                ],
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "details",
+            "type": "text",
+            "schema": {
+                "name": "details",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "text",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "details",
+                "special": null,
+                "interface": "input-multiline",
+                "options": {
+                    "placeholder": "Optional details on reason for leave"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 7,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "approved_by",
+            "type": "uuid",
+            "schema": {
+                "name": "approved_by",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "uuid",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id"
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "approved_by",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": {
+                    "template": "{{first_name}} {{last_name}}",
+                    "enableCreate": false
+                },
+                "display": "user",
+                "display_options": {
+                    "circle": true
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 8,
+                "width": "half",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "approved",
+            "type": "timestamp",
+            "schema": {
+                "name": "approved",
+                "table": "ts_leave",
+                "schema": "public",
+                "data_type": "timestamp with time zone",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave",
+                "field": "approved",
+                "special": null,
+                "interface": "datetime",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 9,
+                "width": "half",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
             "collection": "ts_tasks",
             "field": "id",
             "type": "integer",
@@ -652,6 +1218,230 @@
                 "note": null,
                 "conditions": null,
                 "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave_type",
+            "field": "id",
+            "type": "integer",
+            "schema": {
+                "name": "id",
+                "table": "ts_leave_type",
+                "schema": "public",
+                "data_type": "integer",
+                "is_nullable": false,
+                "generation_expression": null,
+                "default_value": "nextval('ts_leave_type_id_seq'::regclass)",
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 32,
+                "numeric_scale": 0,
+                "is_unique": true,
+                "is_primary_key": true,
+                "has_auto_increment": true,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave_type",
+                "field": "id",
+                "special": null,
+                "interface": "input",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": true,
+                "hidden": true,
+                "sort": 1,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave_type",
+            "field": "name",
+            "type": "string",
+            "schema": {
+                "name": "name",
+                "table": "ts_leave_type",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave_type",
+                "field": "name",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "placeholder": "Name of leave type",
+                    "iconLeft": "label"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 2,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave_type",
+            "field": "status",
+            "type": "string",
+            "schema": {
+                "name": "status",
+                "table": "ts_leave_type",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": false,
+                "generation_expression": null,
+                "default_value": "draft",
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave_type",
+                "field": "status",
+                "special": null,
+                "interface": "select-dropdown",
+                "options": {
+                    "choices": [
+                        {
+                            "text": "Published",
+                            "value": "published"
+                        },
+                        {
+                            "text": "Draft",
+                            "value": "draft"
+                        },
+                        {
+                            "text": "Archived",
+                            "value": "archived"
+                        }
+                    ]
+                },
+                "display": "labels",
+                "display_options": {
+                    "showAsDot": true,
+                    "choices": [
+                        {
+                            "text": "Published",
+                            "value": "published",
+                            "foreground": "#FFFFFF",
+                            "background": "var(--theme--primary)"
+                        },
+                        {
+                            "text": "Draft",
+                            "value": "draft",
+                            "foreground": "#18222F",
+                            "background": "#D3DAE4"
+                        },
+                        {
+                            "text": "Archived",
+                            "value": "archived",
+                            "foreground": "#FFFFFF",
+                            "background": "var(--theme--warning)"
+                        }
+                    ]
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 3,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_leave_type",
+            "field": "claimable",
+            "type": "boolean",
+            "schema": {
+                "name": "claimable",
+                "table": "ts_leave_type",
+                "schema": "public",
+                "data_type": "boolean",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": true,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_leave_type",
+                "field": "claimable",
+                "special": [
+                    "cast-boolean"
+                ],
+                "interface": "boolean",
+                "options": {
+                    "label": "Claimable"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 4,
+                "width": "full",
+                "translations": null,
+                "note": "Is the leave type given as substitute for working hours (eg. sick, holiday) or not (eg. work from home)",
+                "conditions": null,
+                "required": false,
                 "group": null,
                 "validation": null,
                 "validation_message": null
@@ -898,6 +1688,103 @@
         },
         {
             "collection": "ts_settings",
+            "field": "leave_hours_per_day",
+            "type": "decimal",
+            "schema": {
+                "name": "leave_hours_per_day",
+                "table": "ts_settings",
+                "schema": "public",
+                "data_type": "numeric",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": 7.6,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 10,
+                "numeric_scale": 2,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_settings",
+                "field": "leave_hours_per_day",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "min": 1,
+                    "max": 24,
+                    "placeholder": "Total number of hours assigned to a full day of leave",
+                    "iconLeft": "av_timer"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 6,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_settings",
+            "field": "nine_day_fortnight_leave_type",
+            "type": "integer",
+            "schema": {
+                "name": "nine_day_fortnight_leave_type",
+                "table": "ts_settings",
+                "schema": "public",
+                "data_type": "integer",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 32,
+                "numeric_scale": 0,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": "public",
+                "foreign_key_table": "ts_leave_type",
+                "foreign_key_column": "id"
+            },
+            "meta": {
+                "collection": "ts_settings",
+                "field": "nine_day_fortnight_leave_type",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 7,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_settings",
             "field": "nine_day_fortnight_note",
             "type": "alias",
             "schema": null,
@@ -917,12 +1804,60 @@
                 "display_options": null,
                 "readonly": true,
                 "hidden": false,
-                "sort": 6,
+                "sort": 8,
                 "width": "full",
                 "translations": null,
                 "note": null,
                 "conditions": null,
                 "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_settings",
+            "field": "default_timesheet_email",
+            "type": "string",
+            "schema": {
+                "name": "default_timesheet_email",
+                "table": "ts_settings",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "ts_settings",
+                "field": "default_timesheet_email",
+                "special": null,
+                "interface": "input",
+                "options": {
+                    "placeholder": "Email address used for timesheet related notifications if manager role not set",
+                    "iconLeft": "alternate_email"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 9,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": true,
                 "group": null,
                 "validation": null,
                 "validation_message": null
@@ -1581,7 +2516,7 @@
                     "choices": [
                         {
                             "value": null,
-                            "text": "Project Default"
+                            "text": "Default (Sync with Project)"
                         },
                         {
                             "value": "auto",
@@ -1641,60 +2576,15 @@
                 "special": null,
                 "interface": "system-theme",
                 "options": {
-                    "appearance": "light"
+                    "appearance": "light",
+                    "includeNull": true
                 },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
-                "hidden": true,
+                "hidden": false,
                 "sort": 16,
-                "width": "half",
-                "group": null,
-                "translations": null,
-                "note": null,
-                "conditions": null,
-                "required": false
-            }
-        },
-        {
-            "collection": "directus_users",
-            "field": "theme_dark",
-            "type": "string",
-            "schema": {
-                "name": "theme_dark",
-                "table": "directus_users",
-                "schema": "public",
-                "data_type": "character varying",
-                "is_nullable": true,
-                "generation_expression": null,
-                "default_value": null,
-                "is_generated": false,
-                "max_length": 255,
-                "comment": null,
-                "numeric_precision": null,
-                "numeric_scale": null,
-                "is_unique": false,
-                "is_primary_key": false,
-                "has_auto_increment": false,
-                "foreign_key_schema": null,
-                "foreign_key_table": null,
-                "foreign_key_column": null
-            },
-            "meta": {
-                "system": true,
-                "collection": "directus_users",
-                "field": "theme_dark",
-                "special": null,
-                "interface": "system-theme",
-                "options": {
-                    "appearance": "dark"
-                },
-                "display": null,
-                "display_options": null,
-                "readonly": false,
-                "hidden": true,
-                "sort": 17,
-                "width": "half",
+                "width": "full",
                 "group": null,
                 "translations": null,
                 "note": null,
@@ -1734,7 +2624,56 @@
                     "cast-json"
                 ],
                 "interface": "system-theme-overrides",
-                "options": null,
+                "options": {
+                    "appearance": "light"
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 17,
+                "width": "full",
+                "group": null,
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "theme_dark",
+            "type": "string",
+            "schema": {
+                "name": "theme_dark",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "character varying",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": 255,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "system": true,
+                "collection": "directus_users",
+                "field": "theme_dark",
+                "special": null,
+                "interface": "system-theme",
+                "options": {
+                    "appearance": "dark",
+                    "includeNull": true
+                },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
@@ -1780,7 +2719,9 @@
                     "cast-json"
                 ],
                 "interface": "system-theme-overrides",
-                "options": null,
+                "options": {
+                    "appearance": "dark"
+                },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
@@ -2270,16 +3211,16 @@
         },
         {
             "collection": "directus_users",
-            "field": "nineDayFortnight",
+            "field": "nineDayFortnightStart",
             "type": "date",
             "schema": {
-                "name": "nineDayFortnight",
+                "name": "nineDayFortnightStart",
                 "table": "directus_users",
                 "schema": "public",
                 "data_type": "date",
                 "is_nullable": true,
                 "generation_expression": null,
-                "default_value": null,
+                "default_value": "2023-10-09",
                 "is_generated": false,
                 "max_length": null,
                 "comment": null,
@@ -2294,10 +3235,42 @@
             },
             "meta": {
                 "collection": "directus_users",
-                "field": "nineDayFortnight",
+                "field": "nineDayFortnightStart",
                 "special": null,
                 "interface": "datetime",
                 "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 1,
+                "width": "full",
+                "translations": null,
+                "note": "This should store the LAST start (Monday) of the 9DF for the staff member.",
+                "conditions": null,
+                "required": false,
+                "group": "Timesheet",
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "Timesheet",
+            "type": "alias",
+            "schema": null,
+            "meta": {
+                "collection": "directus_users",
+                "field": "Timesheet",
+                "special": [
+                    "alias",
+                    "no-data",
+                    "group"
+                ],
+                "interface": "group-detail",
+                "options": {
+                    "headerIcon": "av_timer"
+                },
                 "display": null,
                 "display_options": null,
                 "readonly": false,
@@ -2312,9 +3285,88 @@
                 "validation": null,
                 "validation_message": null
             }
+        },
+        {
+            "collection": "directus_users",
+            "field": "manager",
+            "type": "uuid",
+            "schema": {
+                "name": "manager",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "uuid",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": null,
+                "numeric_scale": null,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id"
+            },
+            "meta": {
+                "collection": "directus_users",
+                "field": "manager",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": {
+                    "template": null,
+                    "enableCreate": false,
+                    "filter": null
+                },
+                "display": "user",
+                "display_options": {
+                    "circle": true
+                },
+                "readonly": false,
+                "hidden": false,
+                "sort": 2,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": "Timesheet",
+                "validation": null,
+                "validation_message": null
+            }
         }
     ],
     "relations": [
+        {
+            "collection": "timesheets",
+            "field": "user_updated",
+            "related_collection": "directus_users",
+            "schema": {
+                "constraint_name": "timesheets_user_updated_foreign",
+                "table": "timesheets",
+                "column": "user_updated",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "NO ACTION"
+            },
+            "meta": {
+                "many_collection": "timesheets",
+                "many_field": "user_updated",
+                "one_collection": "directus_users",
+                "one_field": null,
+                "one_collection_field": null,
+                "one_allowed_collections": null,
+                "junction_field": null,
+                "sort_field": null,
+                "one_deselect_action": "nullify"
+            }
+        },
         {
             "collection": "timesheets",
             "field": "user_created",
@@ -2342,13 +3394,65 @@
             }
         },
         {
-            "collection": "timesheets",
-            "field": "user_updated",
+            "collection": "ts_leave",
+            "field": "leave_type",
+            "related_collection": "ts_leave_type",
+            "schema": {
+                "constraint_name": "ts_leave_leave_type_foreign",
+                "table": "ts_leave",
+                "column": "leave_type",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "ts_leave_type",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "SET NULL"
+            },
+            "meta": {
+                "many_collection": "ts_leave",
+                "many_field": "leave_type",
+                "one_collection": "ts_leave_type",
+                "one_field": null,
+                "one_collection_field": null,
+                "one_allowed_collections": null,
+                "junction_field": null,
+                "sort_field": null,
+                "one_deselect_action": "nullify"
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "approved_by",
             "related_collection": "directus_users",
             "schema": {
-                "constraint_name": "timesheets_user_updated_foreign",
-                "table": "timesheets",
-                "column": "user_updated",
+                "constraint_name": "ts_leave_approved_by_foreign",
+                "table": "ts_leave",
+                "column": "approved_by",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "SET NULL"
+            },
+            "meta": {
+                "many_collection": "ts_leave",
+                "many_field": "approved_by",
+                "one_collection": "directus_users",
+                "one_field": null,
+                "one_collection_field": null,
+                "one_allowed_collections": null,
+                "junction_field": null,
+                "sort_field": null,
+                "one_deselect_action": "nullify"
+            }
+        },
+        {
+            "collection": "ts_leave",
+            "field": "user",
+            "related_collection": "directus_users",
+            "schema": {
+                "constraint_name": "ts_leave_user_foreign",
+                "table": "ts_leave",
+                "column": "user",
                 "foreign_key_schema": "public",
                 "foreign_key_table": "directus_users",
                 "foreign_key_column": "id",
@@ -2356,8 +3460,8 @@
                 "on_delete": "NO ACTION"
             },
             "meta": {
-                "many_collection": "timesheets",
-                "many_field": "user_updated",
+                "many_collection": "ts_leave",
+                "many_field": "user",
                 "one_collection": "directus_users",
                 "one_field": null,
                 "one_collection_field": null,
@@ -2394,6 +3498,32 @@
             }
         },
         {
+            "collection": "ts_settings",
+            "field": "nine_day_fortnight_leave_type",
+            "related_collection": "ts_leave_type",
+            "schema": {
+                "constraint_name": "ts_settings_nine_day_fortnight_leave_type_foreign",
+                "table": "ts_settings",
+                "column": "nine_day_fortnight_leave_type",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "ts_leave_type",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "SET NULL"
+            },
+            "meta": {
+                "many_collection": "ts_settings",
+                "many_field": "nine_day_fortnight_leave_type",
+                "one_collection": "ts_leave_type",
+                "one_field": null,
+                "one_collection_field": null,
+                "one_allowed_collections": null,
+                "junction_field": null,
+                "sort_field": null,
+                "one_deselect_action": "nullify"
+            }
+        },
+        {
             "collection": "directus_users",
             "field": "role",
             "related_collection": "directus_roles",
@@ -2418,6 +3548,32 @@
                 "one_deselect_action": "nullify",
                 "junction_field": null,
                 "sort_field": null
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "manager",
+            "related_collection": "directus_users",
+            "schema": {
+                "constraint_name": "directus_users_manager_foreign",
+                "table": "directus_users",
+                "column": "manager",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "NO ACTION"
+            },
+            "meta": {
+                "many_collection": "directus_users",
+                "many_field": "manager",
+                "one_collection": "directus_users",
+                "one_field": null,
+                "one_collection_field": null,
+                "one_allowed_collections": null,
+                "junction_field": null,
+                "sort_field": null,
+                "one_deselect_action": "nullify"
             }
         },
         {

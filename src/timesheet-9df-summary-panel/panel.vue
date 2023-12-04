@@ -42,7 +42,7 @@ api.get('/users').then((response) => {
 watch(user, (_newValue, oldValue) => {
 	if (user.value) {
 		let userDetails = users.value.find(userFromList => userFromList.id === user.value)
-		if (userDetails.nineDayFortnight === null) {
+		if (userDetails.nineDayFortnightStart === null) {
 			alert("User does not have a 9 day fortnight start date entered. Cannot continue.")
 			user.value = oldValue
 			return
@@ -51,7 +51,7 @@ watch(user, (_newValue, oldValue) => {
 		let query = `?fields=*&filter[user_created][_eq]=${user.value}`
 
 		api.get(`/items/timesheets${query}`).then((response) => {
-			items.value = calculateTimeSpent(response.data.data, new Date(userDetails.nineDayFortnight))
+			items.value = calculateTimeSpent(response.data.data, new Date(userDetails.nineDayFortnightStart))
 		})
 	}
 }, { immediate: true })

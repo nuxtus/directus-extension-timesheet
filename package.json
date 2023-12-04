@@ -4,6 +4,10 @@
 	"type": "module",
 	"description": "Timesheet and user timer for projects.",
 	"icon": "extension",
+	"dependencies": {
+		"@directus/errors": "^0.2.0",
+		"file-saver": "^2.0.5"
+	},
 	"directus:extension": {
 		"host": "^10.1.13",
 		"type": "bundle",
@@ -31,6 +35,24 @@
 				"type": "panel",
 				"name": "timesheet-user-hours-panel",
 				"source": "src/timesheet-user-hours-panel/index.ts"
+			},
+			{
+				"type": "hook",
+				"name": "process-leave-hook",
+				"source": "src/process-leave-hook/index.ts"
+			},
+			{
+				"type": "operation",
+				"name": "approve-leave-operation",
+				"source": {
+					"app": "src/approve-leave-operation/app.ts",
+					"api": "src/approve-leave-operation/api.ts"
+				}
+			},
+			{
+				"type": "hook",
+				"name": "9df-calculation-hook",
+				"source": "src/9df-calculation-hook/index.ts"
 			}
 		]
 	},
@@ -51,10 +73,8 @@
 	},
 	"devDependencies": {
 		"@directus/extensions-sdk": "10.1.13",
-		"typescript": "^5.2.2",
-		"vue": "^3.3.7"
-	},
-	"dependencies": {
-		"file-saver": "^2.0.5"
+		"@types/node": "^20.10.1",
+		"typescript": "^5.3.2",
+		"vue": "^3.3.9"
 	}
 }
