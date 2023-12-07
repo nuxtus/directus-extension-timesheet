@@ -6,7 +6,7 @@ export default ({ schedule }, { services, getSchema }) => {
 		const schema = await getSchema()
 		const { ItemsService } = services
 		const userService = new ItemsService("directus_users", {
-			schema: await getSchema(),
+			schema,
 		})
 		const leaveService = new ItemsService("ts_leave", {
 			schema,
