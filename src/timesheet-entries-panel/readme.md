@@ -1,0 +1,1 @@
+A dashboard panel that shows all timesheet entries for a particular user from a specified date.

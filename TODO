@@ -1,0 +1,24 @@
+✔ Split timesheet table to its own component @done(23-11-01 15:51)
+✔ TypeError: Cannot read properties of undefined (reading 'countDistinct') @done(23-11-02 16:39)
+✔ Only admin should have the ability to add\update "approved by" field for leave @done(23-11-28 12:09)
+✔ Remove leave approval flow and replace with Directus "operation" to do this. Flow should only be to trigger via button. @done(23-11-27 14:49)
+✔ Can only delete leave in the future @done(23-11-27 15:18)
+✔ User's 9DF start date is already recorded, use this to add future 9DFs each week to the calendar (automatically via cron hook) @done(23-11-30 13:38)
+☐ See "Permissions" in README.md, these could be hard-coded in the extension
+✔ Confirm user without update permissions on leave approval fields can't run the leave approval operation @done(23-11-28 13:49)
+✔ Admin user needs to be able to remove/update leave approval fields (other users cannot) @done(23-11-28 13:49)
+✔ If leave is updated and already approved, need to remove approval! - Send email for re-approval as per flow. @done(23-11-29 17:16)
+✔ Rename leave collection to ts_leave @done(23-11-30 14:11)
+☐ Add leave to timesheet calculations
+
+Later:
+
+	☐ Add support rostering
+	☐ Export leave and timesheet to CSV
+	☐ Change the ts_settings fields to be dropdowns instead of text fields, see https://docs.directus.io/guides/extensions/interfaces-relational-dropdown.html
+	☐ Could choose whether leave requires approval by type (eg. sick leave may not require approval)
+	☐ In process-leave-hook/index.ts add a link to the leave record in the email
+	✔ Use EMAIL_FROM in .env to send emails in process-leave-hook/index.ts @done(23-11-30 10:37)
+	☐ Add an email template to timesheet emails: https://stackoverflow.com/questions/68984920/webhooks-directus-9-send-an-email-when-user-create-a-record-in-a-table
+	☐ Add public holidays to leave/timesheets
+	☐ Add default leave, ts_settings, bookmarks and other default items to a setup/config hook

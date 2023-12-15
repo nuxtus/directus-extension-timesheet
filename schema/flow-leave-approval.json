@@ -1,0 +1,29 @@
+{
+  "id": "1d3334c0-c448-4f18-9e0e-9f2deb63330c",
+  "name": "Approve leave",
+  "icon": "order_approve",
+  "color": null,
+  "description": "Approve leave that has been applied for.",
+  "trigger": "manual",
+  "options": {
+    "collections": [
+      "leave"
+    ],
+    "requireConfirmation": true,
+    "confirmationDescription": "This will approve the leave, are you sure?"
+  },
+  "operation": "c91fe83b-09c0-4cee-9c29-db7d9b4240ac",
+  "operations": [
+    {
+      "id": "c91fe83b-09c0-4cee-9c29-db7d9b4240ac",
+      "name": "Approve leave",
+      "key": "ts_approve_leave_dn91r",
+      "type": "ts_approve_leave",
+      "position_x": 22,
+      "position_y": 1,
+      "options": {},
+      "resolve": null,
+      "reject": null
+    }
+  ]
+}

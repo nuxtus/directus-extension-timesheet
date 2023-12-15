@@ -1,0 +1,338 @@
+[
+	{
+		"filter": null,
+		"layout_query": {
+			"tabular": {
+				"limit": 25
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 1,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "Faults",
+		"layout": null,
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": {
+			"cards": {
+				"sort": [
+					"email"
+				],
+				"limit": 25,
+				"page": 1
+			}
+		},
+		"layout_options": {
+			"cards": {
+				"icon": "account_circle",
+				"title": "{{ first_name }} {{ last_name }}",
+				"subtitle": "{{ email }}",
+				"size": 4
+			}
+		},
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 2,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "directus_users",
+		"layout": "cards",
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": {
+			"tabular": {
+				"limit": 25
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 3,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "timesheets",
+		"layout": "nuxtus-timesheet-layout",
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": {
+			"tabular": {
+				"page": 1
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 6,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "ts_tasks",
+		"layout": null,
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": null,
+		"layout_options": null,
+		"role": null,
+		"user": null,
+		"id": 11,
+		"bookmark": null,
+		"icon": "more_time",
+		"color": null,
+		"search": null,
+		"collection": "timesheets",
+		"layout": "nuxtus-timesheet-layout",
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": {
+			"tabular": {
+				"fields": [
+					"bookmark",
+					"id",
+					"role",
+					"user",
+					"collection"
+				]
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 16,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "directus_presets",
+		"layout": null,
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": {
+			"tabular": {
+				"page": 1
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 21,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "ts_leave_type",
+		"layout": null,
+		"refresh_interval": null
+	},
+	{
+		"filter": {
+			"_and": [
+				{
+					"approved": {
+						"_nnull": true
+					}
+				}
+			]
+		},
+		"layout_query": {
+			"tabular": {
+				"page": 1
+			}
+		},
+		"layout_options": {
+			"calendar": {
+				"viewInfo": {
+					"type": "dayGridMonth",
+					"startDateStr": "2023-11-01T00:00:00+08:00"
+				},
+				"template": "{{user.first_name}} {{user.last_name}} ({{leave_type.name}})",
+				"startDateField": "start_date",
+				"endDateField": "end_date"
+			}
+		},
+		"role": null,
+		"user": null,
+		"id": 22,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "ts_leave",
+		"layout": "calendar",
+		"refresh_interval": null
+	},
+	{
+		"filter": {
+			"_and": [
+				{
+					"user": {
+						"_eq": "$CURRENT_USER"
+					}
+				},
+				{
+					"end_date": {
+						"_gte": "$NOW"
+					}
+				}
+			]
+		},
+		"layout_query": {
+			"tabular": {
+				"page": 1,
+				"fields": [
+					"start_date",
+					"end_date",
+					"leave_type",
+					"total_hours",
+					"approved_by"
+				]
+			}
+		},
+		"layout_options": {
+			"tabular": {
+				"widths": {}
+			}
+		},
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 23,
+		"bookmark": "My leave",
+		"icon": "sunny_snowing",
+		"color": null,
+		"search": null,
+		"collection": "ts_leave",
+		"layout": null,
+		"refresh_interval": null
+	},
+	{
+		"filter": {
+			"_and": [
+				{
+					"approved": {
+						"_null": true
+					}
+				},
+				{
+					"start_date": {
+						"_gte": "$NOW"
+					}
+				}
+			]
+		},
+		"layout_query": {
+			"tabular": {
+				"page": 1
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "f52ba8f3-d0cc-4122-96ca-5198ebce957e",
+		"id": 24,
+		"bookmark": "To approve",
+		"icon": "order_approve",
+		"color": null,
+		"search": null,
+		"collection": "ts_leave",
+		"layout": null,
+		"refresh_interval": null
+	},
+	{
+		"filter": {
+			"_and": [
+				{
+					"approved": {
+						"_nnull": true
+					}
+				}
+			]
+		},
+		"layout_query": null,
+		"layout_options": {
+			"calendar": {
+				"template": "{{user.first_name}} {{user.last_name}} ({{leave_type.name}})",
+				"startDateField": "start_date",
+				"endDateField": "end_date"
+			}
+		},
+		"role": null,
+		"user": "1f1655ab-b242-4909-9798-242810f21fc4",
+		"id": 25,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "ts_leave",
+		"layout": "calendar",
+		"refresh_interval": null
+	},
+	{
+		"filter": {
+			"_and": [
+				{
+					"status": {
+						"_eq": "published"
+					}
+				}
+			]
+		},
+		"layout_query": {
+			"tabular": {
+				"fields": [
+					"name"
+				],
+				"page": 1
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": null,
+		"id": 27,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "ts_leave_type",
+		"layout": "tabular",
+		"refresh_interval": null
+	},
+	{
+		"filter": null,
+		"layout_query": {
+			"tabular": {
+				"page": 1
+			}
+		},
+		"layout_options": null,
+		"role": null,
+		"user": "1f1655ab-b242-4909-9798-242810f21fc4",
+		"id": 28,
+		"bookmark": null,
+		"icon": "bookmark",
+		"color": null,
+		"search": null,
+		"collection": "ts_tasks",
+		"layout": null,
+		"refresh_interval": null
+	}
+]

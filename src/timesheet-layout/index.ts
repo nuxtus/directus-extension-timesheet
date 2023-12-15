@@ -15,7 +15,7 @@ export default defineLayout({
 		actions: () => null,
 	},
 	setup(props) {
-		const name = ref("TD Timesheets")
+		const name = ref("Timesheets")
 		const { collection, filter, search } = toRefs(props)
 		const {
 			info,
@@ -25,12 +25,24 @@ export default defineLayout({
 
 		const limit = ref(20)
 
+		// Added this to assist with users who have permission to see all timesheets to default to only their own, it gets clobbered if user then uses the filter
+		filter.value = {
+			user_created: {
+				_eq: "$CURRENT_USER",
+			},
+		}
+
+		// Get the timesheet settings from ts_settings
+		const { items: settings } = useItems(ref("ts_settings"), {
+			fields: ["task_collection", "task_collection_display_field"],
+		})
+
 		const { items, loading, error, totalPages, totalCount } = useItems(
 			collection,
 			{
 				sort: ref(["-date_created"]),
 				limit,
-				fields: ref(["*", "project.*"]),
+				fields: ref(["*"]),
 				filter,
 				search,
 				page: ref(1),
@@ -50,6 +62,7 @@ export default defineLayout({
 			totalPages,
 			totalCount,
 			limit,
+			settings,
 		}
 	},
 })

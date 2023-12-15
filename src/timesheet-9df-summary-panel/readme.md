@@ -1,0 +1,1 @@
+A dashboard panel that shows a list of all 9 day fortnights and the total hours worked for a selected employee.
