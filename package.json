@@ -1,80 +1,91 @@
 {
-	"name": "directus-extension-timesheet",
-	"version": "1.0.0",
-	"type": "module",
-	"description": "Timesheet and user timer for projects.",
-	"icon": "extension",
-	"dependencies": {
-		"@directus/errors": "^0.2.0",
-		"file-saver": "^2.0.5"
-	},
-	"directus:extension": {
-		"host": "^10.1.13",
-		"type": "bundle",
-		"path": {
-			"app": "dist/app.js",
-			"api": "dist/api.js"
-		},
-		"entries": [
-			{
-				"type": "layout",
-				"name": "timesheet-layout",
-				"source": "src/timesheet-layout/index.ts"
-			},
-			{
-				"type": "panel",
-				"name": "timesheet-entries-panel",
-				"source": "src/timesheet-entries-panel/index.ts"
-			},
-			{
-				"type": "panel",
-				"name": "timesheet-9df-summary-panel",
-				"source": "src/timesheet-9df-summary-panel/index.ts"
-			},
-			{
-				"type": "panel",
-				"name": "timesheet-user-hours-panel",
-				"source": "src/timesheet-user-hours-panel/index.ts"
-			},
-			{
-				"type": "hook",
-				"name": "process-leave-hook",
-				"source": "src/process-leave-hook/index.ts"
-			},
-			{
-				"type": "operation",
-				"name": "approve-leave-operation",
-				"source": {
-					"app": "src/approve-leave-operation/app.ts",
-					"api": "src/approve-leave-operation/api.ts"
-				}
-			},
-			{
-				"type": "hook",
-				"name": "9df-calculation-hook",
-				"source": "src/9df-calculation-hook/index.ts"
-			}
-		]
-	},
-	"keywords": [
-		"directus",
-		"directus-extension",
-		"directus-custom-bundle",
-		"timesheet",
-		"timesheets",
-		"timer",
-		"project"
-	],
-	"scripts": {
-		"build": "directus-extension build",
-		"dev": "directus-extension build -w --no-minify",
-		"link": "directus-extension link",
-		"add": "directus-extension add"
-	},
-	"devDependencies": {
-		"@directus/extensions-sdk": "10.1.13",
-		"@types/node": "^20.10.1",
-		"typescript": "^5.3.2",
-		"vue": "^3.3.9"
-	}
+  "name": "@nuxtus/directus-extension-timesheet",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Timesheet and user timer for projects.",
+  "icon": "extension",
+  "dependencies": {
+    "@directus/errors": "^0.2.0",
+    "file-saver": "^2.0.5"
+  },
+  "directus:extension": {
+    "host": "^10.1.13",
+    "type": "bundle",
+    "path": {
+      "app": "dist/app.js",
+      "api": "dist/api.js"
+    },
+    "entries": [
+      {
+        "type": "layout",
+        "name": "timesheet-layout",
+        "source": "src/timesheet-layout/index.ts"
+      },
+      {
+        "type": "panel",
+        "name": "timesheet-entries-panel",
+        "source": "src/timesheet-entries-panel/index.ts"
+      },
+      {
+        "type": "panel",
+        "name": "timesheet-9df-summary-panel",
+        "source": "src/timesheet-9df-summary-panel/index.ts"
+      },
+      {
+        "type": "panel",
+        "name": "timesheet-user-hours-panel",
+        "source": "src/timesheet-user-hours-panel/index.ts"
+      },
+      {
+        "type": "hook",
+        "name": "process-leave-hook",
+        "source": "src/process-leave-hook/index.ts"
+      },
+      {
+        "type": "operation",
+        "name": "approve-leave-operation",
+        "source": {
+          "app": "src/approve-leave-operation/app.ts",
+          "api": "src/approve-leave-operation/api.ts"
+        }
+      },
+      {
+        "type": "hook",
+        "name": "9df-calculation-hook",
+        "source": "src/9df-calculation-hook/index.ts"
+      }
+    ]
+  },
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-custom-bundle",
+    "timesheet",
+    "timesheets",
+    "timer",
+    "project"
+  ],
+  "scripts": {
+    "build": "directus-extension build",
+    "dev": "directus-extension build -w --no-minify",
+    "link": "directus-extension link",
+    "add": "directus-extension add"
+  },
+  "devDependencies": {
+    "@directus/extensions-sdk": "10.1.13",
+    "@types/node": "^20.10.1",
+    "typescript": "^5.3.2",
+    "vue": "^3.3.9"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuxtus/directus-extension-timesheet.git"
+  },
+  "author": "Craig Harman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nuxtus/directus-extension-timesheet/issues"
+  },
+  "homepage": "https://github.com/nuxtus/directus-extension-timesheet#readme"
 }
