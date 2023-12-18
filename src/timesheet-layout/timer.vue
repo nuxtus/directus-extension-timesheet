@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 
 const emit = defineEmits(['start', 'stop', 'reset'])
 let props = defineProps({ tasks: Array, timer: { required: true }, totalTimeInSec: Number, nineDFInSec: Number })
@@ -81,7 +81,7 @@ function stop() {
 }
 
 function clockRunning() {
-	if (timeBegan === null) {
+	if (timeBegan !== null) {
 		console.error("Clock running called but timeBegan is null")
 	}
 
@@ -127,6 +127,14 @@ watchEffect(() => {
 	if (props.nineDFInSec) {
 		nineDF.value = new Date(nineDFInSecCalc.value * 1000).toISOString().substr(11, 5)
 	}
+})
+
+// Watch for property changes once 9DF is calculated in the layout
+watch(() => props.nineDFInSec, (new9DFTime) => {
+	nineDFInSecCalc.value = new9DFTime || 0
+})
+watch(() => props.totalTimeInSec, (newTotalTime) => {
+	totalTimeInSecCalc.value = newTotalTime || 0
 })
 </script>
 
