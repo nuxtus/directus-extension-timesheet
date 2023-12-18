@@ -26,17 +26,19 @@
 import { ref, watchEffect } from 'vue'
 
 const emit = defineEmits(['start', 'stop', 'reset'])
-let props = defineProps(['tasks', 'timer', 'totalTimeInSec', 'nineDFInSec'])
+let props = defineProps({ tasks: Array, timer: { required: true }, totalTimeInSec: Number, nineDFInSec: Number })
 
 let time = ref("00:00:00")
 let totalTime = ref("00:00")
 let task = ref(null)
 let nineDF = ref("00:00")
+let totalTimeInSecCalc = ref(props.totalTimeInSec || 0)
+let nineDFInSecCalc = ref(props.nineDFInSec || 0)
 
 let timeBegan: Date | null = null,
 	timeStopped: Date | null = null,
 	stoppedDuration = 0,
-	started: Date | null = null,
+	started: ReturnType<typeof setInterval>,
 	running = ref(false)
 
 function toggle() {
@@ -79,8 +81,12 @@ function stop() {
 }
 
 function clockRunning() {
+	if (timeBegan === null) {
+		console.error("Clock running called but timeBegan is null")
+	}
+
 	var currentTime = new Date(),
-		timeElapsed = new Date(currentTime - timeBegan - stoppedDuration),
+		timeElapsed = new Date(currentTime - timeBegan! - stoppedDuration),
 		hour = timeElapsed.getUTCHours(),
 		min = timeElapsed.getUTCMinutes(),
 		sec = timeElapsed.getUTCSeconds()
@@ -91,9 +97,9 @@ function clockRunning() {
 		zeroPrefix(sec, 2)
 
 	// Clock is running every second
-	props.totalTimeInSec += 1 // Keep the total time adding up live
+	totalTimeInSecCalc.value += 1 // Keep the total time adding up live
 	if (props.nineDFInSec) {
-		props.nineDFInSec += 1 // Keep the nineDF adding up live
+		nineDFInSecCalc.value += 1 // Keep the nineDF adding up live
 	}
 };
 
@@ -107,7 +113,7 @@ function zeroPrefix(num, digit) {
 
 // If a timer gets added, we need to reset and start everything
 watchEffect(() => {
-	totalTime.value = new Date(props.totalTimeInSec * 1000).toISOString().substr(11, 5)
+	totalTime.value = new Date(totalTimeInSecCalc.value * 1000).toISOString().substr(11, 5)
 	if (props.timer !== undefined) {
 		if (props.timer.end_time === null) {
 			running.value = true
@@ -119,7 +125,7 @@ watchEffect(() => {
 		}
 	}
 	if (props.nineDFInSec) {
-		nineDF.value = new Date(props.nineDFInSec * 1000).toISOString().substr(11, 5)
+		nineDF.value = new Date(nineDFInSecCalc.value * 1000).toISOString().substr(11, 5)
 	}
 })
 </script>
