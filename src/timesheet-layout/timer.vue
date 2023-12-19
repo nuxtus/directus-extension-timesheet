@@ -23,20 +23,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 
 const emit = defineEmits(['start', 'stop', 'reset'])
-let props = defineProps(['tasks', 'timer', 'totalTimeInSec', 'nineDFInSec'])
+let props = defineProps({ tasks: Array, timer: { required: true }, totalTimeInSec: Number, nineDFInSec: Number })
 
 let time = ref("00:00:00")
 let totalTime = ref("00:00")
 let task = ref(null)
 let nineDF = ref("00:00")
+let totalTimeInSecCalc = ref(props.totalTimeInSec || 0)
+let nineDFInSecCalc = ref(props.nineDFInSec || 0)
 
 let timeBegan: Date | null = null,
 	timeStopped: Date | null = null,
 	stoppedDuration = 0,
-	started: Date | null = null,
+	started: ReturnType<typeof setInterval>,
 	running = ref(false)
 
 function toggle() {
@@ -79,8 +81,12 @@ function stop() {
 }
 
 function clockRunning() {
-	var currentTime = new Date(),
-		timeElapsed = new Date(currentTime - timeBegan - stoppedDuration),
+	if (timeBegan === null) {
+		console.error("Clock running called but timeBegan is null")
+	}
+
+	var currentTime = new Date().setSeconds(0, 0),
+		timeElapsed = new Date(currentTime - timeBegan! - stoppedDuration),
 		hour = timeElapsed.getUTCHours(),
 		min = timeElapsed.getUTCMinutes(),
 		sec = timeElapsed.getUTCSeconds()
@@ -91,9 +97,11 @@ function clockRunning() {
 		zeroPrefix(sec, 2)
 
 	// Clock is running every second
-	props.totalTimeInSec += 1 // Keep the total time adding up live
+	totalTimeInSecCalc.value += 1 // Keep the total time adding up live
+	totalTime.value = new Date(totalTimeInSecCalc.value * 1000).toISOString().substr(11, 5)
 	if (props.nineDFInSec) {
-		props.nineDFInSec += 1 // Keep the nineDF adding up live
+		nineDFInSecCalc.value += 1 // Keep the nineDF adding up live
+		nineDF.value = new Date(nineDFInSecCalc.value * 1000).toISOString().substr(11, 5)
 	}
 };
 
@@ -105,21 +113,24 @@ function zeroPrefix(num, digit) {
 	return (zero + num).slice(-digit)
 }
 
-// If a timer gets added, we need to reset and start everything
-watchEffect(() => {
-	totalTime.value = new Date(props.totalTimeInSec * 1000).toISOString().substr(11, 5)
-	if (props.timer !== undefined) {
-		if (props.timer.end_time === null) {
+// Watch for property changes once 9DF is calculated in the layout
+watch(() => props.nineDFInSec, (new9DFTime) => {
+	nineDFInSecCalc.value = new9DFTime || 0
+})
+watch(() => props.totalTimeInSec, (newTotalTime) => {
+	totalTimeInSecCalc.value = newTotalTime || 0
+})
+watch(() => props.timer, (timer) => {
+	if (timer !== undefined) {
+		// If the timer is already running (from a previous start), start the clock
+		if (timer.end_time === null) {
 			running.value = true
-			timeBegan = new Date(props.timer.start_time)
+			timeBegan = new Date(timer.start_time)
 			clearInterval(started)
 			stoppedDuration = 0
 			timeStopped = null
 			started = setInterval(clockRunning, 1000)
 		}
-	}
-	if (props.nineDFInSec) {
-		nineDF.value = new Date(props.nineDFInSec * 1000).toISOString().substr(11, 5)
 	}
 })
 </script>

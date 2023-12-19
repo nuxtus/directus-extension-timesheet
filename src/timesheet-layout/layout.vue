@@ -201,6 +201,9 @@ const calculateTotal9DFTime = computed(() => {
 
 	props.items.forEach(item => {
 		let endTime = new Date(item.end_time)
+		if (item.end_time === null) {
+			endTime = new Date().setSeconds(0, 0)
+		}
 		let startTime = new Date(item.start_time)
 
 		if (startTime >= mostRecentMonday && startTime <= currentDate) {
