@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 
 const emit = defineEmits(['start', 'stop', 'reset'])
 let props = defineProps({ tasks: Array, timer: { required: true }, totalTimeInSec: Number, nineDFInSec: Number })
@@ -85,8 +85,8 @@ function clockRunning() {
 		console.error("Clock running called but timeBegan is null")
 	}
 
-	var currentTime = new Date().setSeconds(0, 0),
-		timeElapsed = new Date(currentTime - timeBegan! - stoppedDuration),
+	var currentTime = new Date(),
+		timeElapsed = new Date(currentTime - timeBegan! + stoppedDuration),
 		hour = timeElapsed.getUTCHours(),
 		min = timeElapsed.getUTCMinutes(),
 		sec = timeElapsed.getUTCSeconds()
@@ -98,12 +98,19 @@ function clockRunning() {
 
 	// Clock is running every second
 	totalTimeInSecCalc.value += 1 // Keep the total time adding up live
-	totalTime.value = new Date(totalTimeInSecCalc.value * 1000).toISOString().substr(11, 5)
+	totalTime.value = formatTime(totalTimeInSecCalc.value)
 	if (props.nineDFInSec) {
 		nineDFInSecCalc.value += 1 // Keep the nineDF adding up live
-		nineDF.value = new Date(nineDFInSecCalc.value * 1000).toISOString().substr(11, 5)
+		nineDF.value = formatTime(nineDFInSecCalc.value)
 	}
 };
+
+function formatTime(seconds) {
+	const hours = Math.floor(seconds / 3600)
+	const minutes = Math.floor((seconds % 3600) / 60)
+	return `${zeroPrefix(hours, 2)}:${zeroPrefix(minutes, 2)}`
+}
+
 
 function zeroPrefix(num, digit) {
 	var zero = ''
@@ -116,9 +123,11 @@ function zeroPrefix(num, digit) {
 // Watch for property changes once 9DF is calculated in the layout
 watch(() => props.nineDFInSec, (new9DFTime) => {
 	nineDFInSecCalc.value = new9DFTime || 0
+	nineDF.value = formatTime(nineDFInSecCalc.value)
 })
 watch(() => props.totalTimeInSec, (newTotalTime) => {
 	totalTimeInSecCalc.value = newTotalTime || 0
+	totalTime.value = formatTime(totalTimeInSecCalc.value)
 })
 watch(() => props.timer, (timer) => {
 	if (timer !== undefined) {
