@@ -1,6 +1,6 @@
 {
   "name": "@nuxtus/directus-extension-timesheet",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Timesheet and user timer for projects.",
   "icon": "extension",
