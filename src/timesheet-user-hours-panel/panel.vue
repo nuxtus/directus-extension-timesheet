@@ -5,11 +5,11 @@
 			<div class="group">
 				<div class="block">
 					<div class="header">Time</div>
-					<div class="number" :class="{ 'text-under-warning': isUnderTime }">{{ totalTime }}</div>
+					<div class="number" :class="{ 'text-under-warning': isUnderTime }">{{ formatTime(totalTime) }}</div>
 				</div>
 				<div class="block">
 					<div class="header">Expected</div>
-					<div class="number">{{ expectedTime }}</div>
+					<div class="number">{{ formatTime(expectedTime) }}</div>
 				</div>
 			</div>
 		</div>
@@ -38,7 +38,7 @@ const props = defineProps({
 
 const api = useApi()
 
-let startDate = ref(null)
+let startDate: String = ref(undefined)
 let userName = ref('-')
 let totalTime = ref('-')
 let expectedTime = ref(76)
@@ -81,13 +81,23 @@ switch (props.timeframe) {
 			}
 			const user = response.data.data[0]
 			userName.value = `${user.first_name} ${user.last_name}`
-			startDate.value = startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString()
+			let startDateValue = startOfWeek(new Date(), { weekStartsOn: 1 })
+			startDateValue.setHours(0, 0, 0, 0) // Set the time to midnight
 			let today = new Date()
-			let daysSinceStart = Math.min(differenceInDays(today, startDate.value), 5)
+			let daysSinceStart = Math.min(differenceInDays(today, startDateValue), 5)
 			expectedTime.value = 7.6 * daysSinceStart
+
+			startDate.value = startDateValue.toISOString()
 		})
 		break
 }
+
+function formatTime(totalHours) {
+	const hours = Math.floor(totalHours)
+	const minutes = Math.floor((totalHours - hours) * 60).toString().padStart(2, '0')
+	return `${hours}:${minutes}`
+}
+
 
 function updateTimes() {
 	let query = `?fields=*&filter[user_created][_eq]=${props.user.key}&filter[start_time][_gte]=${startDate.value}`
@@ -105,7 +115,7 @@ function updateTimes() {
 
 		isUnderTime.value = totalMinutes < (60 * expectedTime.value) ? true : false
 
-		totalTime.value = `${hours}:${minutes}`
+		totalTime.value = totalMinutes / 60
 	})
 }
 
@@ -113,7 +123,7 @@ watch(startDate, () => {
 	updateTimes()
 })
 
-if (startDate.value !== null) {
+if (startDate.value !== undefined) {
 	updateTimes()
 }
 
