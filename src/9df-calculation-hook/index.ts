@@ -6,7 +6,7 @@ export default ({ schedule }, { services, getSchema }) => {
 		const schema = await getSchema()
 		const { ItemsService } = services
 		const userService = new ItemsService("directus_users", {
-			schema,
+			schema: await getSchema(),
 		})
 		const leaveService = new ItemsService("ts_leave", {
 			schema,
@@ -43,7 +43,7 @@ export default ({ schedule }, { services, getSchema }) => {
 				_and: [
 					{
 						leave_type: {
-							_eq: 3, // TODO: Hard coded 9DF leave type, how to get around this?
+							_eq: settings.nine_day_fortnight_leave_type,
 						},
 					},
 					{
@@ -79,15 +79,16 @@ export default ({ schedule }, { services, getSchema }) => {
 			for (let i = 0; i < 4; i++) {
 				const next9DFLeaveDay = new Date(first9DFLeaveDay)
 				next9DFLeaveDay.setDate(next9DFLeaveDay.getDate() + i * 14)
-				// Only push next9DFLeaveDay if it is not in existingLeave (check the start_date key)
-				if (
-					!existingLeave.find(
-						(leave) =>
-							leave.start_date ===
-							next9DFLeaveDay.toISOString().substring(0, 10)
-					)
-				) {
-					// next9DFLeaveDays.push(next9DFLeaveDay)
+
+				// Only push next9DFLeaveDay if it is not in existingLeave (check the start_date key for current user)
+				const leaveExists = existingLeave.some(
+					(leave: { start_date: string; user: { id: number } }) =>
+						leave.start_date ===
+							next9DFLeaveDay.toISOString().substring(0, 10) &&
+						leave.user === user.id
+				)
+
+				if (!leaveExists) {
 					next9DFLeaveDays.push({
 						start_date: next9DFLeaveDay.toISOString().substring(0, 10),
 						end_date: next9DFLeaveDay.toISOString().substring(0, 10),
@@ -101,9 +102,8 @@ export default ({ schedule }, { services, getSchema }) => {
 			}
 		}
 
-		const results = await leaveService.createMany(next9DFLeaveDays, {
+		await leaveService.createMany(next9DFLeaveDays, {
 			emitEvents: false, // Don't emit events to skip the checks done by the process-leave-hook, which fail as no accountability here
 		})
-		console.log(results)
 	})
 }
