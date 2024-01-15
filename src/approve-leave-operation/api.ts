@@ -55,7 +55,7 @@ export default defineOperationApi<Options>({
 		} catch (err) {
 			throw new InvalidOperationUsageError()
 		}
-		if (collection !== "leave") {
+		if (collection !== "ts_leave") {
 			throw new LeaveCollectionError()
 		}
 
