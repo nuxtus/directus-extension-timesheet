@@ -92,7 +92,7 @@ export default ({ schedule }, { services, getSchema }) => {
 						start_date: next9DFLeaveDay.toISOString().substring(0, 10),
 						end_date: next9DFLeaveDay.toISOString().substring(0, 10),
 						user: user.id,
-						leave_type: settings.nine_date_fortnight_leave_type,
+						leave_type: settings.nine_day_fortnight_leave_type,
 						total_hours: settings.leave_hours_per_day,
 						approved: new Date().toISOString().substring(0, 10),
 						approved_by: user.manager, // Manager may be null
