@@ -105,13 +105,13 @@ function updateTimes() {
 		const times = response.data.data
 		let totalMinutes = times.reduce((total, time) => {
 			let startTime = new Date(time.start_time)
-			let endTime = new Date(time.end_time)
+			let endTime = new Date()
+			if (time.end_time) {
+				endTime = new Date(time.end_time)
+			}
 			let differenceInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60)
 			return total + differenceInMinutes
 		}, 0)
-
-		let hours = Math.floor(totalMinutes / 60)
-		let minutes = (totalMinutes % 60).toFixed(0).padStart(2, '0')
 
 		isUnderTime.value = totalMinutes < (60 * expectedTime.value) ? true : false
 
