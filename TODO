@@ -11,6 +11,7 @@
 ✔ Rename leave collection to ts_leave @done(23-11-30 14:11)
 ☐ Add leave to timesheet calculations
 ☐ Dashboard widgets need to check Insight permissions (currently a user can view all the 9DF panel data!)
+☐ end_time_original requires the field to have update permissions to add it on stop but ideally you don't want the user able to change this at all
 
 Later:
 
