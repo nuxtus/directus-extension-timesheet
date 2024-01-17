@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
-			:totalTimeInSec="totalTime" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
+			:totalTimeInSec="totalTimeInSec" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
 		<div>
 			<TimesheetTable :items="items" :tasks="tasks" :sort="sort" :total-pages="totalPages"
 				@row-click="editTimesheetEntry" @update-sort="resort" @update-page="paginate">
@@ -19,7 +19,7 @@ import { useApi } from '@directus/extensions-sdk'
 const api = useApi()
 
 const router = useRouter()
-let totalTime = ref(0)
+let totalTimeInSec = ref(0)
 let currentTimer = ref(undefined)
 let currentUser = null
 let sort = ref({ by: "date_created", desc: true })
@@ -69,11 +69,11 @@ function getTodaysTimers() {
 		}
 
 		const today = new Date()
-		today.setUTCHours(0, 0, 0, 0)
+		today.setHours(0, 0, 0, 0)
 
 		// Get all today's timers for total and any current
 		api.get(`/items/${props.collection}?filter={"_and": [ {"start_time": { "_gte": "${today.toISOString().slice(0, 19).replace('T', ' ')}" } }, { "user_created": { "_eq": "${currentUser.id}"} }] }&sort=date_created`).then((response) => {
-			totalTime.value = 0
+			let totalTime = 0
 			response.data.data.forEach(item => {
 				let endTime
 				if (item.end_time === null) {
@@ -84,8 +84,9 @@ function getTodaysTimers() {
 				}
 				let startTime = new Date(item.start_time)
 				const diff = endTime - startTime
-				totalTime.value += Math.abs(Math.floor(diff / 1000)) // Convert from milliseconds to seconds
+				totalTime += Math.abs(Math.floor(diff / 1000)) // Convert from milliseconds to seconds
 			})
+			totalTimeInSec.value = totalTime
 		})
 	})
 }
