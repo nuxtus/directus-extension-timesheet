@@ -34,6 +34,12 @@ const PermissionDeniedError = createError(
 	403
 )
 
+const UnknownError = createError(
+	"UNKNOWN_ERROR",
+	"Failed while attempting to approve leave, but unknown reason.",
+	400
+)
+
 export default defineOperationApi<Options>({
 	id: "ts_approve_leave",
 	handler: async ({}, { data, services, accountability, getSchema }) => {
@@ -59,17 +65,20 @@ export default defineOperationApi<Options>({
 			throw new LeaveCollectionError()
 		}
 
-		const leaveService = new services.ItemsService("leave", {
+		const leaveService = new services.ItemsService("ts_leave", {
 			schema: await getSchema(),
 			accountability: accountability,
 		})
-		const leaveToApprove = await leaveService.readMany(leaveIds)
 
 		const now = new Date().toISOString()
 
-		await leaveService.updateMany(leaveIds, {
-			approved: now,
-			approved_by: accountability.user,
-		})
+		try {
+			await leaveService.updateMany(leaveIds, {
+				approved: now,
+				approved_by: accountability.user,
+			})
+		} catch (err) {
+			throw new UnknownError()
+		}
 	},
 })
