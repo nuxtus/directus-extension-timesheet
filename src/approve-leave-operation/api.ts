@@ -12,12 +12,6 @@ type LeaveDataTrigger = {
 	}
 }
 
-type Leave = {
-	id: number
-	approved: string
-	approved_by: number
-}
-
 const InvalidOperationUsageError = createError(
 	"INVALID_OPERATION_USAGE_ERROR",
 	"This operation must be used on a flow that is triggered by a leave update request.",
