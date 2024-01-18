@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="error" v-if="collection !== 'timesheet'">
+		<div class="error" v-if="collection !== 'timesheets'">
 			This layout can only be used on the timesheet collection. Visit "Layout options" and select another layout to
 			continue.
 		</div>
