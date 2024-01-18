@@ -1,11 +1,17 @@
 <template>
 	<div>
-		<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
-			:totalTimeInSec="totalTimeInSec" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
-		<div>
-			<TimesheetTable :items="items" :tasks="tasks" :sort="sort" :total-pages="totalPages"
-				@row-click="editTimesheetEntry" @update-sort="resort" @update-page="paginate">
-			</TimesheetTable>
+		<div class="error" v-if="collection !== 'timesheet'">
+			This layout can only be used on the timesheet collection. Visit "Layout options" and select another layout to
+			continue.
+		</div>
+		<div v-else>
+			<Timer @start="createTimeEntry" @stop="finishTimeEntry" :tasks="tasks" :timer="currentTimer"
+				:totalTimeInSec="totalTimeInSec" :nineDFInSec="calculateTotal9DFTime" item-key="id"></Timer>
+			<div>
+				<TimesheetTable :items="items" :tasks="tasks" :sort="sort" :total-pages="totalPages"
+					@row-click="editTimesheetEntry" @update-sort="resort" @update-page="paginate">
+				</TimesheetTable>
+			</div>
 		</div>
 	</div>
 </template>
@@ -225,3 +231,10 @@ export default defineComponent({
 	inheritAttrs: false,
 })
 </script>
+
+<style scoped>
+.error {
+	color: var(--theme--danger);
+	margin: 24px;
+}
+</style>
