@@ -35,7 +35,7 @@
                 "unarchive_value": "draft",
                 "sort_field": null,
                 "accountability": "all",
-                "color": null,
+                "color": "#6644FF",
                 "item_duplication_fields": null,
                 "sort": 1,
                 "group": "timesheets",
@@ -125,7 +125,7 @@
                 "unarchive_value": "draft",
                 "sort_field": null,
                 "accountability": "all",
-                "color": null,
+                "color": "#6644FF",
                 "item_duplication_fields": null,
                 "sort": 3,
                 "group": "timesheets",
@@ -198,7 +198,7 @@
                 "accountability": "all",
                 "color": "#6644FF",
                 "item_duplication_fields": null,
-                "sort": 6,
+                "sort": 15,
                 "group": null,
                 "collapse": "open",
                 "preview_url": null,
@@ -628,22 +628,27 @@
                 "is_unique": false,
                 "is_primary_key": false,
                 "has_auto_increment": false,
-                "foreign_key_schema": null,
-                "foreign_key_table": null,
-                "foreign_key_column": null
+                "foreign_key_schema": "public",
+                "foreign_key_table": "ts_tasks",
+                "foreign_key_column": "id"
             },
             "meta": {
                 "collection": "timesheets",
                 "field": "task_id",
-                "special": null,
-                "interface": "input",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
                 "options": {
-                    "min": 1
+                    "template": "{{name}}",
+                    "enableCreate": false
                 },
-                "display": null,
-                "display_options": null,
+                "display": "related-values",
+                "display_options": {
+                    "template": "{{name}}"
+                },
                 "readonly": false,
-                "hidden": true,
+                "hidden": false,
                 "sort": 9,
                 "width": "full",
                 "translations": null,
@@ -744,7 +749,7 @@
                         ]
                     }
                 },
-                "display": null,
+                "display": "user",
                 "display_options": null,
                 "readonly": true,
                 "hidden": true,
@@ -1738,6 +1743,38 @@
         },
         {
             "collection": "ts_settings",
+            "field": "nine_day_fortnight_note",
+            "type": "alias",
+            "schema": null,
+            "meta": {
+                "collection": "ts_settings",
+                "field": "nine_day_fortnight_note",
+                "special": [
+                    "alias",
+                    "no-data"
+                ],
+                "interface": "presentation-notice",
+                "options": {
+                    "icon": "date_range",
+                    "text": "If your organisation has 9 day fortnights you can add a `nineDayFortnightStart` field to the user collection. This should then store a Monday representing the start of the users full fortnight and will be used to calculate 9DF totals in the timesheet."
+                },
+                "display": null,
+                "display_options": null,
+                "readonly": true,
+                "hidden": false,
+                "sort": 6,
+                "width": "full",
+                "translations": null,
+                "note": null,
+                "conditions": null,
+                "required": false,
+                "group": null,
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "ts_settings",
             "field": "nine_day_fortnight_leave_type",
             "type": "integer",
             "schema": {
@@ -1773,38 +1810,6 @@
                 "readonly": false,
                 "hidden": false,
                 "sort": 7,
-                "width": "full",
-                "translations": null,
-                "note": null,
-                "conditions": null,
-                "required": false,
-                "group": null,
-                "validation": null,
-                "validation_message": null
-            }
-        },
-        {
-            "collection": "ts_settings",
-            "field": "nine_day_fortnight_note",
-            "type": "alias",
-            "schema": null,
-            "meta": {
-                "collection": "ts_settings",
-                "field": "nine_day_fortnight_note",
-                "special": [
-                    "alias",
-                    "no-data"
-                ],
-                "interface": "presentation-notice",
-                "options": {
-                    "icon": "date_range",
-                    "text": "If your organisation has 9 day fortnights you can add a `nineDayFortnightStart` field to the user collection. This should then store a Monday representing the start of the users full fortnight and will be used to calculate 9DF totals in the timesheet."
-                },
-                "display": null,
-                "display_options": null,
-                "readonly": true,
-                "hidden": false,
-                "sort": 8,
                 "width": "full",
                 "translations": null,
                 "note": null,
@@ -3103,6 +3108,10 @@
                         {
                             "text": "Default",
                             "value": "default"
+                        },
+                        {
+                            "text": "Microsoft",
+                            "value": "microsoft"
                         }
                     ]
                 },
@@ -3211,16 +3220,16 @@
         },
         {
             "collection": "directus_users",
-            "field": "nineDayFortnightStart",
-            "type": "date",
+            "field": "manager",
+            "type": "uuid",
             "schema": {
-                "name": "nineDayFortnightStart",
+                "name": "manager",
                 "table": "directus_users",
                 "schema": "public",
-                "data_type": "date",
+                "data_type": "uuid",
                 "is_nullable": true,
                 "generation_expression": null,
-                "default_value": "2023-10-09",
+                "default_value": null,
                 "is_generated": false,
                 "max_length": null,
                 "comment": null,
@@ -3229,24 +3238,32 @@
                 "is_unique": false,
                 "is_primary_key": false,
                 "has_auto_increment": false,
-                "foreign_key_schema": null,
-                "foreign_key_table": null,
-                "foreign_key_column": null
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id"
             },
             "meta": {
                 "collection": "directus_users",
-                "field": "nineDayFortnightStart",
-                "special": null,
-                "interface": "datetime",
-                "options": null,
-                "display": null,
-                "display_options": null,
+                "field": "manager",
+                "special": [
+                    "m2o"
+                ],
+                "interface": "select-dropdown-m2o",
+                "options": {
+                    "template": null,
+                    "enableCreate": false,
+                    "filter": null
+                },
+                "display": "user",
+                "display_options": {
+                    "circle": true
+                },
                 "readonly": false,
                 "hidden": false,
                 "sort": 1,
                 "width": "full",
                 "translations": null,
-                "note": "This should store the LAST start (Monday) of the 9DF for the staff member.",
+                "note": null,
                 "conditions": null,
                 "required": false,
                 "group": "Timesheet",
@@ -3288,16 +3305,16 @@
         },
         {
             "collection": "directus_users",
-            "field": "manager",
-            "type": "uuid",
+            "field": "nineDayFortnightStart",
+            "type": "date",
             "schema": {
-                "name": "manager",
+                "name": "nineDayFortnightStart",
                 "table": "directus_users",
                 "schema": "public",
-                "data_type": "uuid",
+                "data_type": "date",
                 "is_nullable": true,
                 "generation_expression": null,
-                "default_value": null,
+                "default_value": "2023-10-09",
                 "is_generated": false,
                 "max_length": null,
                 "comment": null,
@@ -3306,26 +3323,68 @@
                 "is_unique": false,
                 "is_primary_key": false,
                 "has_auto_increment": false,
-                "foreign_key_schema": "public",
-                "foreign_key_table": "directus_users",
-                "foreign_key_column": "id"
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
             },
             "meta": {
                 "collection": "directus_users",
-                "field": "manager",
-                "special": [
-                    "m2o"
-                ],
-                "interface": "select-dropdown-m2o",
+                "field": "nineDayFortnightStart",
+                "special": null,
+                "interface": "datetime",
+                "options": null,
+                "display": null,
+                "display_options": null,
+                "readonly": false,
+                "hidden": false,
+                "sort": 2,
+                "width": "full",
+                "translations": null,
+                "note": "This should store the LAST start (Monday) of the 9DF for the staff member.",
+                "conditions": null,
+                "required": false,
+                "group": "Timesheet",
+                "validation": null,
+                "validation_message": null
+            }
+        },
+        {
+            "collection": "directus_users",
+            "field": "voip_extension_id",
+            "type": "integer",
+            "schema": {
+                "name": "voip_extension_id",
+                "table": "directus_users",
+                "schema": "public",
+                "data_type": "integer",
+                "is_nullable": true,
+                "generation_expression": null,
+                "default_value": null,
+                "is_generated": false,
+                "max_length": null,
+                "comment": null,
+                "numeric_precision": 32,
+                "numeric_scale": 0,
+                "is_unique": false,
+                "is_primary_key": false,
+                "has_auto_increment": false,
+                "foreign_key_schema": null,
+                "foreign_key_table": null,
+                "foreign_key_column": null
+            },
+            "meta": {
+                "collection": "directus_users",
+                "field": "voip_extension_id",
+                "special": null,
+                "interface": "input",
                 "options": {
-                    "template": null,
-                    "enableCreate": false,
-                    "filter": null
+                    "min": 1000,
+                    "max": 9999,
+                    "placeholder": "Get from VOIP provider",
+                    "iconLeft": "perm_phone_msg"
                 },
-                "display": "user",
-                "display_options": {
-                    "circle": true
-                },
+                "display": null,
+                "display_options": null,
                 "readonly": false,
                 "hidden": false,
                 "sort": 2,
@@ -3334,13 +3393,39 @@
                 "note": null,
                 "conditions": null,
                 "required": false,
-                "group": "Timesheet",
+                "group": null,
                 "validation": null,
                 "validation_message": null
             }
         }
     ],
     "relations": [
+        {
+            "collection": "timesheets",
+            "field": "user_created",
+            "related_collection": "directus_users",
+            "schema": {
+                "constraint_name": "timesheets_user_created_foreign",
+                "table": "timesheets",
+                "column": "user_created",
+                "foreign_key_schema": "public",
+                "foreign_key_table": "directus_users",
+                "foreign_key_column": "id",
+                "on_update": "NO ACTION",
+                "on_delete": "NO ACTION"
+            },
+            "meta": {
+                "many_collection": "timesheets",
+                "many_field": "user_created",
+                "one_collection": "directus_users",
+                "one_field": null,
+                "one_collection_field": null,
+                "one_allowed_collections": null,
+                "junction_field": null,
+                "sort_field": null,
+                "one_deselect_action": "nullify"
+            }
+        },
         {
             "collection": "timesheets",
             "field": "user_updated",
@@ -3369,22 +3454,22 @@
         },
         {
             "collection": "timesheets",
-            "field": "user_created",
-            "related_collection": "directus_users",
+            "field": "task_id",
+            "related_collection": "ts_tasks",
             "schema": {
-                "constraint_name": "timesheets_user_created_foreign",
+                "constraint_name": "timesheets_task_id_foreign",
                 "table": "timesheets",
-                "column": "user_created",
+                "column": "task_id",
                 "foreign_key_schema": "public",
-                "foreign_key_table": "directus_users",
+                "foreign_key_table": "ts_tasks",
                 "foreign_key_column": "id",
                 "on_update": "NO ACTION",
-                "on_delete": "NO ACTION"
+                "on_delete": "SET NULL"
             },
             "meta": {
                 "many_collection": "timesheets",
-                "many_field": "user_created",
-                "one_collection": "directus_users",
+                "many_field": "task_id",
+                "one_collection": "ts_tasks",
                 "one_field": null,
                 "one_collection_field": null,
                 "one_allowed_collections": null,
