@@ -1,6 +1,6 @@
 {
   "name": "@nuxtus/directus-extension-timesheet",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Timesheet and user timer for projects.",
   "icon": "extension",
@@ -53,6 +53,11 @@
         "type": "hook",
         "name": "9df-calculation-hook",
         "source": "src/9df-calculation-hook/index.ts"
+      },
+      {
+        "type": "hook",
+        "name": "process-timesheet-entry",
+        "source": "src/process-timesheet-entry/index.ts"
       }
     ]
   },

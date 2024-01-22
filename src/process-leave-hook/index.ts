@@ -74,6 +74,12 @@ async function notifyManagerByEmail(
 	})
 	const userDetails = await userService.readOne(accountability!.user)
 
+	const leaveTypeService = new ItemsService("ts_leave_type", {
+		schema: schema,
+		accountability: accountability,
+	})
+	const leaveType = await leaveTypeService.readOne(payload.leave_type)
+
 	let managerEmail = undefined
 	if (userDetails.manager) {
 		const managerDetails = await userService.readOne(userDetails.manager)
@@ -87,16 +93,22 @@ async function notifyManagerByEmail(
 	const { MailService } = services
 	const mailService = new MailService({ schema })
 
+	const emailMessage = `${userDetails.first_name} ${userDetails.last_name} has submitted a leave request that requires approval. Please login to approve or reject the request.\r\n\r\n
+		Leave Details:\r\n
+		Leave Type: ${leaveType.name}
+		Start Date: ${payload.start_date}\r\n
+		End Date: ${payload.end_date}\r\n
+		Total Hours: ${payload.total_hours}\r\n
+		\r\n
+		To process visit ${env.PUBLIC_URL}/admin/content/ts_leave
+		`
+
 	mailService
 		.send({
 			to: managerEmail,
 			from: userDetails.email, // or use env.EMAIL_FROM
 			subject: `A leave request requires approval`,
-			text: `${userDetails.first_name} ${
-				userDetails.last_name
-			} has submitted a leave request that requires approval. Please login to approve or reject the request.\r\n\r\n${JSON.stringify(
-				payload
-			)}`,
+			text: emailMessage,
 		})
 		.catch((err: any) => {
 			console.error(err)
@@ -197,7 +209,18 @@ export default defineHook(({ filter, action }, { services, env }) => {
 				return // No need to notify as person creating leave is an admin
 			}
 
-			await notifyManagerByEmail(services, schema, payload, accountability)
+			try {
+				await notifyManagerByEmail(
+					services,
+					schema,
+					payload,
+					accountability,
+					env
+				)
+			} catch (err) {
+				console.error(err)
+				throw new EmailError()
+			}
 		}
 	)
 

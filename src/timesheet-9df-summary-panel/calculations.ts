@@ -34,7 +34,10 @@ export function calculateTimeSpent(data: any[], start: Date) {
 
 	data.forEach((item) => {
 		const startTime = new Date(item.start_time)
-		const endTime = new Date(item.end_time)
+		let endTime = new Date(item.end_time)
+		if (item.end_time === null) {
+			endTime = new Date()
+		}
 		const hours = calculateHoursBetweenDates(startTime, endTime)
 
 		for (let i = 0; i < blocks.length; i++) {

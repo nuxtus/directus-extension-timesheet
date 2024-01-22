@@ -40,7 +40,7 @@ export default defineLayout({
 		const { items, loading, error, totalPages, totalCount } = useItems(
 			collection,
 			{
-				sort: ref(["-date_created"]),
+				sort: ref(["-start_time"]),
 				limit,
 				fields: ref(["*"]),
 				filter,

@@ -12,12 +12,6 @@ type LeaveDataTrigger = {
 	}
 }
 
-type Leave = {
-	id: number
-	approved: string
-	approved_by: number
-}
-
 const InvalidOperationUsageError = createError(
 	"INVALID_OPERATION_USAGE_ERROR",
 	"This operation must be used on a flow that is triggered by a leave update request.",
@@ -32,6 +26,12 @@ const PermissionDeniedError = createError(
 	"LEAVE_PERMISSION_DENIED_ERROR",
 	"You do not have permission to approve leave.",
 	403
+)
+
+const UnknownError = createError(
+	"UNKNOWN_ERROR",
+	"Failed while attempting to approve leave, but unknown reason.",
+	400
 )
 
 export default defineOperationApi<Options>({
@@ -55,21 +55,24 @@ export default defineOperationApi<Options>({
 		} catch (err) {
 			throw new InvalidOperationUsageError()
 		}
-		if (collection !== "leave") {
+		if (collection !== "ts_leave") {
 			throw new LeaveCollectionError()
 		}
 
-		const leaveService = new services.ItemsService("leave", {
+		const leaveService = new services.ItemsService("ts_leave", {
 			schema: await getSchema(),
 			accountability: accountability,
 		})
-		const leaveToApprove = await leaveService.readMany(leaveIds)
 
 		const now = new Date().toISOString()
 
-		await leaveService.updateMany(leaveIds, {
-			approved: now,
-			approved_by: accountability.user,
-		})
+		try {
+			await leaveService.updateMany(leaveIds, {
+				approved: now,
+				approved_by: accountability.user,
+			})
+		} catch (err) {
+			throw new UnknownError()
+		}
 	},
 })
