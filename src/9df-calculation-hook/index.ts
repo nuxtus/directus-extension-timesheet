@@ -27,6 +27,7 @@ export default ({ schedule }, { services, getSchema }) => {
 					},
 				],
 			},
+			limit: -1,
 		})
 
 		let existingLeave = []
@@ -53,6 +54,7 @@ export default ({ schedule }, { services, getSchema }) => {
 					},
 				],
 			},
+			limit: -1, // We need all the upcoming 9DF leave
 		})
 
 		const next9DFLeaveDays = [] // Store all the 9DF leave days to be inserted
