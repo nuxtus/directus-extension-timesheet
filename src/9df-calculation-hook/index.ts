@@ -1,6 +1,8 @@
 /** Calculate and insert 9 day fortnight leave in calendar automatically */
 import { Settings } from "../process-leave-hook/ts-settings"
 
+const NUM_FUTURE_9DFS = 4 // How many future 9 day fortnights to move ahead, suggest 4
+
 export default ({ schedule }, { services, getSchema }) => {
 	schedule("0 0 * * 0", async () => {
 		const schema = await getSchema()
@@ -39,6 +41,9 @@ export default ({ schedule }, { services, getSchema }) => {
 		// Get some configuration settings
 		const settings = await Settings.get(services, schema)
 
+		// The point at which we start looking for 9DF entries
+		const startDate = new Date()
+
 		existingLeave = await leaveService.readByQuery({
 			filter: {
 				_and: [
@@ -49,12 +54,14 @@ export default ({ schedule }, { services, getSchema }) => {
 					},
 					{
 						start_date: {
-							_gte: new Date().toISOString().substring(0, 10),
+							_gte: new Date(startDate.getTime() - 3 * 24 * 60 * 60 * 1000)
+								.toISOString()
+								.substring(0, 10), // update this to be 3 days before this date to cover moving from start of week to end of previous week
 						},
 					},
 				],
 			},
-			limit: -1, // We need all the upcoming 9DF leave
+			limit: -1, // We need all the leave records
 		})
 
 		const next9DFLeaveDays = [] // Store all the 9DF leave days to be inserted
@@ -62,14 +69,11 @@ export default ({ schedule }, { services, getSchema }) => {
 		for (const user of users) {
 			// calculate the next 4 9 day fortnight leaves
 
-			// // first get todays date and add 8 weeks to it
-			const today = new Date()
-
 			// get the start date of the next 9 day fortnight
 			const next9DayFortnightStart = new Date(user.nineDayFortnightStart)
 
 			// Check if the next 9 day fortnight has already started
-			while (next9DayFortnightStart < today) {
+			while (next9DayFortnightStart < startDate) {
 				next9DayFortnightStart.setDate(next9DayFortnightStart.getDate() + 14)
 			}
 
@@ -77,14 +81,14 @@ export default ({ schedule }, { services, getSchema }) => {
 			const first9DFLeaveDay = new Date(next9DayFortnightStart)
 			first9DFLeaveDay.setDate(first9DFLeaveDay.getDate() - 3)
 
-			// calculate the dates of the next 4 9DF leave days based on the next9DayFortnightStart and save them in an array
-			for (let i = 0; i < 4; i++) {
+			// calculate the dates of the next NUM_FUTURE_9DFS 9DF leave days based on the next9DayFortnightStart and save them in an array
+			for (let i = 0; i < NUM_FUTURE_9DFS; i++) {
 				const next9DFLeaveDay = new Date(first9DFLeaveDay)
 				next9DFLeaveDay.setDate(next9DFLeaveDay.getDate() + i * 14)
 
 				// Only push next9DFLeaveDay if it is not in existingLeave (check the start_date key for current user)
 				const leaveExists = existingLeave.some(
-					(leave: { start_date: string; user: { id: number } }) =>
+					(leave: { start_date: string; user: { id: string } }) =>
 						leave.start_date ===
 							next9DFLeaveDay.toISOString().substring(0, 10) &&
 						leave.user === user.id
