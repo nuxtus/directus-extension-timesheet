@@ -82,9 +82,8 @@ switch (props.timeframe) {
 			const user = response.data.data[0]
 			userName.value = `${user.first_name} ${user.last_name}`
 			let startDateValue = startOfWeek(new Date(), { weekStartsOn: 1 })
-			startDateValue.setHours(0, 0, 0, 0) // Set the time to midnight
 			let today = new Date()
-			let daysSinceStart = Math.min(differenceInDays(today, startDateValue), 5)
+			let daysSinceStart = differenceInDays(today, startDateValue) + 1
 			expectedTime.value = 7.6 * daysSinceStart
 
 			startDate.value = startDateValue.toISOString()
@@ -115,7 +114,7 @@ function updateTimes() {
 
 		isUnderTime.value = totalMinutes < (60 * expectedTime.value) ? true : false
 
-		totalTime.value = totalMinutes / 60
+		totalTime.value = (totalMinutes / 60) + ""
 	})
 }
 
